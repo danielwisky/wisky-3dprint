@@ -1,0 +1,24 @@
+{% assign post_type = include.type | default: "p" %}
+{% assign post_url = "https://www.instagram.com/" | append: post_type | append: "/" | append: include.id | append: "/" %}
+<article class="gallery-item">
+  <button
+    type="button"
+    class="gallery-trigger"
+    data-gallery-image="{{ include.image | relative_url }}"
+    data-gallery-url="{{ post_url }}"
+    aria-label="Ampliar publicação do Instagram"
+  >
+    <img
+      class="gallery-image"
+      src="{{ include.image | relative_url }}"
+      alt="Trabalho impresso em 3D por @{{ site.instagram.username }}"
+      loading="lazy"
+      decoding="async"
+    >
+    <span class="gallery-overlay" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/>
+      </svg>
+    </span>
+  </button>
+</article>

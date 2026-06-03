@@ -1,0 +1,114 @@
+<script>
+  (function () {
+    var nav = document.getElementById("site-nav");
+    var toggle = document.querySelector(".site-nav-toggle");
+    var menu = document.getElementById("site-nav-menu");
+
+    function onScroll() {
+      nav.classList.toggle("is-scrolled", window.scrollY > 24);
+    }
+
+    if (toggle && menu) {
+      toggle.addEventListener("click", function () {
+        var open = menu.classList.toggle("is-open");
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+
+      menu.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          menu.classList.remove("is-open");
+          toggle.setAttribute("aria-expanded", "false");
+        });
+      });
+    }
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  })();
+
+  (function () {
+    var modal = document.getElementById("gallery-modal");
+    if (!modal) return;
+
+    var triggers = Array.prototype.slice.call(document.querySelectorAll(".gallery-trigger"));
+    if (!triggers.length) return;
+
+    var modalImage = document.getElementById("gallery-modal-image");
+    var modalLink = document.getElementById("gallery-modal-link");
+    var modalTitle = document.getElementById("gallery-modal-title");
+    var prevBtn = modal.querySelector(".gallery-modal-prev");
+    var nextBtn = modal.querySelector(".gallery-modal-next");
+    var currentIndex = 0;
+    var lastTrigger = null;
+
+    function showAt(index) {
+      var total = triggers.length;
+      currentIndex = (index + total) % total;
+      var trigger = triggers[currentIndex];
+
+      modalImage.src = trigger.dataset.galleryImage;
+      modalImage.alt = trigger.querySelector("img").alt;
+      modalLink.href = trigger.dataset.galleryUrl;
+      modalTitle.textContent = "Publicação " + (currentIndex + 1) + " de " + total;
+
+      var hideNav = total <= 1;
+      prevBtn.hidden = hideNav;
+      nextBtn.hidden = hideNav;
+    }
+
+    function openModal(trigger) {
+      lastTrigger = trigger;
+      currentIndex = triggers.indexOf(trigger);
+      if (currentIndex < 0) currentIndex = 0;
+
+      showAt(currentIndex);
+      modal.hidden = false;
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("gallery-modal-open");
+      modal.querySelector(".gallery-modal-close").focus();
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("gallery-modal-open");
+      modalImage.src = "";
+      if (lastTrigger) lastTrigger.focus();
+    }
+
+    function goNext() {
+      showAt(currentIndex + 1);
+      lastTrigger = triggers[currentIndex];
+    }
+
+    function goPrev() {
+      showAt(currentIndex - 1);
+      lastTrigger = triggers[currentIndex];
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener("click", function () {
+        openModal(trigger);
+      });
+    });
+
+    prevBtn.addEventListener("click", goPrev);
+    nextBtn.addEventListener("click", goNext);
+
+    modal.querySelectorAll("[data-gallery-close]").forEach(function (el) {
+      el.addEventListener("click", closeModal);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (modal.hidden) return;
+
+      if (event.key === "Escape") {
+        closeModal();
+      } else if (event.key === "ArrowRight") {
+        goNext();
+      } else if (event.key === "ArrowLeft") {
+        goPrev();
+      }
+    });
+  })();
+</script>

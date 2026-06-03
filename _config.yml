@@ -1,0 +1,30 @@
+title: "Wisky 3D Print"
+description: "Impressão 3D sob encomenda a partir de modelos do MakerWorld. Envie o link, combine cor e tamanho e receba sua peça com qualidade."
+baseurl: ""
+url: "https://3dprint.danielwisky.com.br"
+lang: pt-BR
+
+instagram:
+  username: "wisky.3dprint"
+  profile_url: "https://www.instagram.com/wisky.3dprint"
+  max_posts: 8
+
+makerworld_url: "https://makerworld.com/en"
+
+sass:
+  style: compressed
+
+markdown: kramdown
+kramdown:
+  input: GFM
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+exclude:
+  - CNAME
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - scripts

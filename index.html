@@ -1,0 +1,153 @@
+---
+layout: home
+title: "Wisky 3D Print"
+---
+
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-grid"></div>
+    <div class="hero-glow hero-glow-a"></div>
+    <div class="hero-glow hero-glow-b"></div>
+    <div class="hero-layers">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="container hero-content">
+    <p class="hero-eyebrow">Impressão 3D · Sob encomenda</p>
+    <h1 class="hero-title">
+      Transformo <em>modelos digitais</em> em objetos reais
+    </h1>
+    <p class="hero-lead">
+      Encontrou algo no MakerWorld? Eu imprimo com qualidade, acabamento cuidadoso
+      e entrega combinada direto pelo Instagram.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-gradient" href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">
+        Explorar MakerWorld
+      </a>
+      <a class="btn btn-ghost" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+        Pedir orçamento
+      </a>
+    </div>
+    <dl class="hero-stats">
+      <div>
+        <dt>Modelos</dt>
+        <dd>Qualquer modelo do MakerWorld</dd>
+      </div>
+      <div>
+        <dt>Personalização</dt>
+        <dd>Cor, escala e quantidade</dd>
+      </div>
+      <div>
+        <dt>Contato</dt>
+        <dd>
+          <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+            @{{ site.instagram.username }}
+          </a>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<section id="como-funciona" class="section section-steps">
+  <div class="container">
+    <header class="section-header section-header-center">
+      <span class="section-tag">Como funciona?</span>
+      <h2>Do link ao objeto em 4 passos</h2>
+      <p>Sem formulário, sem burocracia. Você manda o link, eu cuido do resto.</p>
+    </header>
+
+    <ol class="steps-pipeline">
+      <li class="step-pipeline-item">
+        <div class="step-marker" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+          </svg>
+        </div>
+        <div class="step-content">
+          <span class="step-label">Passo 01</span>
+          <h3>Escolha o modelo</h3>
+          <p>Explore o <a href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">MakerWorld</a> e salve a peça que quer imprimir.</p>
+        </div>
+      </li>
+      <li class="step-pipeline-item">
+        <div class="step-marker" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        <div class="step-content">
+          <span class="step-label">Passo 02</span>
+          <h3>Copie o link</h3>
+          <p>Abra a página do modelo e copie a URL completa da barra do navegador.</p>
+        </div>
+      </li>
+      <li class="step-pipeline-item">
+        <div class="step-marker" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z"/>
+          </svg>
+        </div>
+        <div class="step-content">
+          <span class="step-label">Passo 03</span>
+          <h3>Envie no Instagram</h3>
+          <p>Mande o link para <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer"><strong>@{{ site.instagram.username }}</strong></a> informando cor, tamanho e quantidade.</p>
+        </div>
+      </li>
+      <li class="step-pipeline-item">
+        <div class="step-marker step-marker-finish" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+            <path d="M3.3 7.7L12 12.5l8.7-4.8M12 22V12.5"/>
+          </svg>
+        </div>
+        <div class="step-content">
+          <span class="step-label">Passo 04</span>
+          <h3>Receba e imprima</h3>
+          <p>Eu retorno com orçamento, prazo e entrega. Aprovando, sua peça vai para a impressora.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section id="galeria" class="section section-gallery">
+  <div class="container">
+    <header class="section-header section-header-center">
+      <span class="section-tag">Portfólio</span>
+      <h2>Trabalhos recentes</h2>
+      <p>Últimas {{ site.instagram.max_posts | default: 8 }} publicações do Instagram.</p>
+    </header>
+
+    {% include instagram-feed.html %}
+
+    <p class="gallery-more">
+      <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+        Ver todos em @{{ site.instagram.username }} →
+      </a>
+    </p>
+  </div>
+</section>
+
+<section id="contato" class="section section-cta">
+  <div class="container">
+    <div class="cta-panel">
+      <div class="cta-panel-glow" aria-hidden="true"></div>
+      <div class="cta-panel-content">
+        <span class="section-tag">Orçamento</span>
+        <h2>Pronto para imprimir?</h2>
+        <p>Mande o link do modelo no Instagram e receba seu orçamento personalizado.</p>
+        <a class="btn btn-gradient btn-lg" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+          Chamar @{{ site.instagram.username }}
+        </a>
+      </div>
+      <div class="cta-panel-visual" aria-hidden="true">
+        <div class="filament-ring"></div>
+        <div class="filament-core"></div>
+      </div>
+    </div>
+  </div>
+</section>

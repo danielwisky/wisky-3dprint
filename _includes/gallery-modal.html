@@ -1,0 +1,46 @@
+<div id="gallery-modal" class="gallery-modal" hidden aria-hidden="true">
+  <div class="gallery-modal-backdrop" data-gallery-close></div>
+  <div
+    class="gallery-modal-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="gallery-modal-title"
+  >
+    <button type="button" class="gallery-modal-close" data-gallery-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <div class="gallery-modal-viewport">
+      <button type="button" class="gallery-modal-nav gallery-modal-prev" aria-label="Imagem anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+
+      <figure class="gallery-modal-figure">
+        <img id="gallery-modal-image" class="gallery-modal-image" src="" alt="">
+      </figure>
+
+      <button type="button" class="gallery-modal-nav gallery-modal-next" aria-label="Próxima imagem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="gallery-modal-actions">
+      <p id="gallery-modal-title" class="gallery-modal-title">Ver no Instagram</p>
+      <a
+        id="gallery-modal-link"
+        class="btn btn-gradient"
+        href="{{ site.instagram.profile_url }}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Abrir publicação →
+      </a>
+    </div>
+  </div>
+</div>
