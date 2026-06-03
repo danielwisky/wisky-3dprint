@@ -3,11 +3,12 @@ description: "Impressão 3D sob encomenda a partir de modelos do MakerWorld. Env
 baseurl: ""
 url: "https://3dprint.danielwisky.com.br"
 lang: pt-BR
+image: "/assets/img/og-image.jpg"
 
 instagram:
   username: "wisky.3dprint"
   profile_url: "https://www.instagram.com/wisky.3dprint"
-  max_posts: 8
+  max_posts: 12
 
 makerworld_url: "https://makerworld.com/en"
 

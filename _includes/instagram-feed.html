@@ -2,7 +2,7 @@
 {% assign max_posts = site.instagram.max_posts | default: 8 %}
 
 {% if posts.size > 0 %}
-<div class="gallery-grid">
+<div class="gallery-grid reveal-stagger">
   {% for post in posts limit: max_posts %}
     {% include instagram-post.html id=post.id type=post.type image=post.image %}
   {% endfor %}
