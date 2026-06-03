@@ -1,83 +1,25 @@
 # Wisky 3D Print
 
-Landing page de impressão 3D sob encomenda. Instagram: [@wisky.3dprint](https://www.instagram.com/wisky.3dprint).
+Landing page de impressão 3D sob encomenda — [3dprint.danielwisky.com.br](https://3dprint.danielwisky.com.br)
 
-Site estático com [Jekyll](https://jekyllrb.com/), publicado no GitHub Pages.
+Stack: Jekyll · deploy automático via GitHub Actions · galeria sincronizada com [@wisky.3dprint](https://www.instagram.com/wisky.3dprint)
 
-## Desenvolvimento local
+## Local
 
 ```bash
 bundle install
-bundle exec jekyll serve
+bundle exec jekyll serve   # http://localhost:4000
 ```
 
-Acesse http://localhost:4000
+Ruby 3.3+ (ver `.ruby-version`).
 
-> Use sempre `bundle exec jekyll` (não `jekyll` direto). Dependências: `bundle install`.
-
-## Atualizar galeria do Instagram
-
-A galeria exibe **somente as imagens** das últimas 8 publicações. Ao clicar, abre um **modal** com a foto ampliada e botão para ver o post no Instagram.
-
-### Comando rápido
-
-Na raiz do projeto, rode:
+## Galeria
 
 ```bash
-python3 scripts/update-gallery.py
+python3 scripts/update-gallery.py   # baixa as 8 últimas fotos + atualiza _data/instagram_posts.yml
+git add assets/img/gallery/ _data/instagram_posts.yml && git commit -m "Atualiza galeria" && git push
 ```
 
-O script:
+## Deploy
 
-1. Busca as 8 postagens mais recentes de [@wisky.3dprint](https://www.instagram.com/wisky.3dprint)
-2. Baixa as fotos para `assets/img/gallery/`
-3. Atualiza [`_data/instagram_posts.yml`](_data/instagram_posts.yml)
-
-Depois, gere o site novamente:
-
-```bash
-bundle exec jekyll serve
-```
-
-### Fluxo completo (atualizar + publicar)
-
-```bash
-python3 scripts/update-gallery.py
-bundle exec jekyll build
-git add assets/img/gallery/ _data/instagram_posts.yml
-git commit -m "Atualiza galeria Instagram"
-git push
-```
-
-### Adicionar post manualmente
-
-Edite [`_data/instagram_posts.yml`](_data/instagram_posts.yml) e salve a imagem em `assets/img/gallery/`:
-
-```yaml
-posts:
-  - id: "ABC123xyz"
-    type: "p"       # ou "reel"
-    image: "/assets/img/gallery/ABC123xyz.jpg"
-```
-
-| Campo | Descrição |
-|-------|-----------|
-| `id` | Código do post na URL (`/p/ABC123xyz/` ou `/reel/...`) |
-| `type` | `p` para foto/carrossel · `reel` para reels |
-| `image` | Caminho local da imagem no site |
-
-## Publicação
-
-1. Repositório `danielwisky/wisky-3dprint` no GitHub
-2. **Settings → Pages → GitHub Actions**
-3. Push na branch `main` dispara o deploy
-
-## Subdomínio
-
-Arquivo [`CNAME`](CNAME): `3dprint.danielwisky.com.br`
-
-| Tipo  | Nome      | Valor                   |
-|-------|-----------|-------------------------|
-| CNAME | `3dprint` | `danielwisky.github.io` |
-
-No GitHub: **Settings → Pages → Custom domain** + **Enforce HTTPS**.
+Push na `main` → GitHub Actions publica no Pages. Repositório precisa ser **público** (plano free).
