@@ -841,6 +841,7 @@ body.gallery-modal-open {
   display: grid;
   place-items: center;
   padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
+  touch-action: none;
 
   &[hidden] {
     display: none;
@@ -864,6 +865,7 @@ body.gallery-modal-open {
   box-shadow: 0 24px 64px var(--shadow-strong);
   overflow: hidden;
   animation: modalIn 0.25s ease;
+  touch-action: pan-y;
 }
 
 @keyframes modalIn {
@@ -893,6 +895,9 @@ body.gallery-modal-open {
   color: var(--text);
   cursor: pointer;
   transition: background 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 
   svg {
     width: 1rem;
@@ -926,6 +931,9 @@ body.gallery-modal-open {
   cursor: pointer;
   transform: translateY(-50%);
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 
   svg {
     width: 1.25rem;
