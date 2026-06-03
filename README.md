@@ -16,9 +16,19 @@ Ruby 3.3+ (ver `.ruby-version`).
 ## Galeria
 
 ```bash
-python3 scripts/update-gallery.py   # baixa as 8 últimas fotos + atualiza _data/instagram_posts.yml
-git add assets/img/gallery/ _data/instagram_posts.yml && git commit -m "Atualiza galeria" && git push
+./scripts/update-gallery.sh
+git add assets/img/gallery/ assets/img/og-image.jpg _data/instagram_posts.yml \
+  && git commit -m "Atualiza galeria" && git push
 ```
+
+O wrapper cria um virtualenv local em `.venv/` na primeira execução, instala
+[Pillow](https://pillow.readthedocs.io/) e roda `scripts/update-gallery.py`,
+que:
+
+- baixa as 12 fotos mais recentes do feed do Instagram para `assets/img/gallery/`
+- regrava `_data/instagram_posts.yml`
+- gera `assets/img/og-image.jpg` (1200×630) com grid 3×2 das primeiras fotos
+  e título do site sobreposto — usada como preview ao compartilhar o link
 
 ## Deploy
 
