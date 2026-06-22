@@ -8,7 +8,11 @@ image: "/assets/img/og-image.jpg"
 instagram:
   username: "wisky.3dprint"
   profile_url: "https://www.instagram.com/wisky.3dprint"
-  max_posts: 12
+  max_posts: 24
+
+gallery:
+  initial: 12   # quantos posts aparecem antes de clicar em "Carregar mais"
+  batch: 12     # quantos posts cada clique revela
 
 makerworld_url: "https://makerworld.com/en"
 

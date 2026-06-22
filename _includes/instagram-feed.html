@@ -1,12 +1,26 @@
 {% assign posts = site.data.instagram_posts.posts %}
 {% assign max_posts = site.instagram.max_posts | default: 8 %}
+{% assign initial = site.gallery.initial | default: 12 %}
 
 {% if posts.size > 0 %}
 <div class="gallery-grid reveal-stagger">
   {% for post in posts limit: max_posts %}
-    {% include instagram-post.html id=post.id type=post.type image=post.image %}
+    {% if forloop.index0 >= initial %}
+      {% include instagram-post.html id=post.id type=post.type image=post.image hidden=true %}
+    {% else %}
+      {% include instagram-post.html id=post.id type=post.type image=post.image %}
+    {% endif %}
   {% endfor %}
 </div>
+{% assign shown = posts.size %}
+{% if shown > max_posts %}{% assign shown = max_posts %}{% endif %}
+{% if shown > initial %}
+<div class="gallery-loadmore">
+  <button type="button" class="gallery-loadmore-btn" data-gallery-batch="{{ site.gallery.batch | default: 12 }}">
+    Carregar mais
+  </button>
+</div>
+{% endif %}
 {% else %}
 <div class="gallery-empty">
   <div class="gallery-empty-icon" aria-hidden="true">

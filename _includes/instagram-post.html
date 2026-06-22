@@ -1,6 +1,6 @@
 {% assign post_type = include.type | default: "p" %}
 {% assign post_url = "https://www.instagram.com/" | append: post_type | append: "/" | append: include.id | append: "/" %}
-<article class="gallery-item">
+<article class="gallery-item{% if include.hidden %} is-gallery-hidden{% endif %}"{% if include.hidden %} hidden{% endif %}>
   <button
     type="button"
     class="gallery-trigger"

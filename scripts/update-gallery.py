@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Baixa as últimas 12 fotos do @wisky.3dprint e atualiza _data/instagram_posts.yml.
+"""Baixa as últimas 24 fotos do @wisky.3dprint e atualiza _data/instagram_posts.yml.
 
 Também gera (se Pillow estiver instalado) uma imagem og-image.jpg 1200x630
 para preview ao compartilhar o link nas redes sociais.
@@ -16,9 +16,14 @@ import os
 import urllib.request
 
 USERNAME = "wisky.3dprint"
-MAX_POSTS = 12
+MAX_POSTS = 24
 GALLERY_DIR = "assets/img/gallery"
 DATA_FILE = "_data/instagram_posts.yml"
+
+IG_APP_ID = "936619743392459"
+IG_UA = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15"
+PAGE_SIZE = 12          # o IG entrega ~12 itens por página, independente do count
+TARGET_IMAGE_WIDTH = 1080  # qualidade alvo ao escolher entre os candidates
 
 OG_IMAGE_PATH = "assets/img/og-image.jpg"
 OG_TITLE = "Wisky 3D Print"
@@ -29,30 +34,107 @@ OG_HANDLE = "@wisky.3dprint"
 MIN_VALID_BYTES = 5_000  # imagens do IG não vêm menor que isso
 
 
+def _get_json(url):
+    req = urllib.request.Request(url, headers={"User-Agent": IG_UA, "X-IG-App-ID": IG_APP_ID})
+    with urllib.request.urlopen(req) as response:
+        return json.load(response)
+
+
+def _user_id():
+    data = _get_json(
+        f"https://www.instagram.com/api/v1/users/web_profile_info/?username={USERNAME}"
+    )
+    return data["data"]["user"]["id"]
+
+
+def _pick_image_url(item):
+    """Escolhe, entre os candidates, a imagem mais próxima de TARGET_IMAGE_WIDTH."""
+    candidates = item.get("image_versions2", {}).get("candidates", [])
+    if not candidates:
+        return None
+    return min(
+        candidates,
+        key=lambda c: abs(c.get("width", 0) - TARGET_IMAGE_WIDTH),
+    )["url"]
+
+
+def collect_posts():
+    """Reúne até MAX_POSTS posts via endpoint feed/user, paginando por max_id.
+
+    Retorna uma lista normalizada de dicts {code, type, image_url}. Se a
+    paginação falhar no meio, retorna o que já foi coletado (sem quebrar)."""
+    user_id = _user_id()
+    posts = []
+    max_id = None
+
+    while len(posts) < MAX_POSTS:
+        url = f"https://www.instagram.com/api/v1/feed/user/{user_id}/?count={PAGE_SIZE}"
+        if max_id:
+            url += f"&max_id={max_id}"
+        try:
+            data = _get_json(url)
+        except Exception as exc:
+            print(f"Paginação interrompida (mantendo {len(posts)} posts): {exc}")
+            break
+
+        items = data.get("items", [])
+        if not items:
+            break
+
+        for item in items:
+            code = item.get("code")
+            image_url = _pick_image_url(item)
+            if not code or not image_url:
+                continue
+            post_type = "reel" if item.get("product_type") == "clips" else "p"
+            posts.append({"code": code, "type": post_type, "image_url": image_url})
+
+        if not data.get("more_available") or not data.get("next_max_id"):
+            break
+        max_id = data["next_max_id"]
+
+    return posts[:MAX_POSTS]
+
+
+def prune_orphans(keep_paths):
+    """Remove .jpg em GALLERY_DIR que não estão mais no feed (não referenciados).
+
+    Trava de segurança: se a coleta veio muito menor que o que já existe no
+    disco (provável falha/bloqueio da API), não apaga nada."""
+    keep = {os.path.basename(p) for p in keep_paths}
+    if not keep:
+        return []
+
+    existing = [n for n in os.listdir(GALLERY_DIR) if n.endswith(".jpg")]
+    if len(keep) < len(existing) * 0.5:
+        print(
+            f"Prune de órfãs ignorado: coleta ({len(keep)}) bem menor que o disco "
+            f"({len(existing)}) — possível falha da API"
+        )
+        return []
+
+    removed = [n for n in existing if n not in keep]
+    for name in removed:
+        os.remove(os.path.join(GALLERY_DIR, name))
+    return removed
+
+
 def main():
     os.makedirs(GALLERY_DIR, exist_ok=True)
 
-    req = urllib.request.Request(
-        f"https://www.instagram.com/api/v1/users/web_profile_info/?username={USERNAME}",
-        headers={"User-Agent": "Mozilla/5.0", "X-IG-App-ID": "936619743392459"},
-    )
-    with urllib.request.urlopen(req) as response:
-        data = json.load(response)
-
-    edges = data["data"]["user"]["edge_owner_to_timeline_media"]["edges"][:MAX_POSTS]
+    posts = collect_posts()
     lines = ["posts:"]
     image_paths = []
     warnings = []
 
-    for edge in edges:
-        node = edge["node"]
-        code = node["shortcode"]
-        post_type = "reel" if node.get("product_type") == "clips" else "p"
+    for post in posts:
+        code = post["code"]
+        post_type = post["type"]
         image_path = f"{GALLERY_DIR}/{code}.jpg"
         web_path = f"/assets/img/gallery/{code}.jpg"
 
         try:
-            img_req = urllib.request.Request(node["display_url"], headers={"User-Agent": "Mozilla/5.0"})
+            img_req = urllib.request.Request(post["image_url"], headers={"User-Agent": "Mozilla/5.0"})
             with urllib.request.urlopen(img_req) as img_response:
                 content = img_response.read()
             if len(content) < MIN_VALID_BYTES:
@@ -78,6 +160,10 @@ def main():
         print(f"Avisos ({len(warnings)} entrada(s) com problema):")
         for w in warnings:
             print(w)
+
+    removed = prune_orphans(image_paths)
+    if removed:
+        print(f"Removidas {len(removed)} imagem(ns) órfã(s)")
 
     generate_og_image(image_paths[:6])
 

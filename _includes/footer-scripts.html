@@ -30,16 +30,26 @@
     var modal = document.getElementById("gallery-modal");
     if (!modal) return;
 
-    var triggers = Array.prototype.slice.call(document.querySelectorAll(".gallery-trigger"));
-    if (!triggers.length) return;
+    var allTriggers = Array.prototype.slice.call(document.querySelectorAll(".gallery-trigger"));
+    if (!allTriggers.length) return;
 
     var modalImage = document.getElementById("gallery-modal-image");
     var modalLink = document.getElementById("gallery-modal-link");
     var modalTitle = document.getElementById("gallery-modal-title");
     var prevBtn = modal.querySelector(".gallery-modal-prev");
     var nextBtn = modal.querySelector(".gallery-modal-next");
+    var triggers = allTriggers;
     var currentIndex = 0;
     var lastTrigger = null;
+
+    function isVisible(trigger) {
+      var item = trigger.closest(".gallery-item");
+      return item && !item.hidden;
+    }
+
+    function refreshTriggers() {
+      triggers = allTriggers.filter(isVisible);
+    }
 
     function showAt(index) {
       var total = triggers.length;
@@ -57,6 +67,7 @@
     }
 
     function openModal(trigger) {
+      refreshTriggers();
       lastTrigger = trigger;
       currentIndex = triggers.indexOf(trigger);
       if (currentIndex < 0) currentIndex = 0;
@@ -86,7 +97,7 @@
       lastTrigger = triggers[currentIndex];
     }
 
-    triggers.forEach(function (trigger) {
+    allTriggers.forEach(function (trigger) {
       trigger.addEventListener("click", function () {
         openModal(trigger);
       });
@@ -108,6 +119,37 @@
         goNext();
       } else if (event.key === "ArrowLeft") {
         goPrev();
+      }
+    });
+  })();
+
+  (function () {
+    var btn = document.querySelector(".gallery-loadmore-btn");
+    if (!btn) return;
+
+    var grid = document.querySelector(".gallery-grid");
+    if (!grid) return;
+
+    var batch = parseInt(btn.getAttribute("data-gallery-batch"), 10) || 12;
+
+    btn.addEventListener("click", function () {
+      var hidden = Array.prototype.slice.call(grid.querySelectorAll(".gallery-item.is-gallery-hidden"));
+      var toReveal = hidden.slice(0, batch);
+
+      toReveal.forEach(function (item) {
+        item.hidden = false;
+        item.classList.remove("is-gallery-hidden");
+        item.classList.add("is-revealing");
+      });
+
+      if (hidden.length - toReveal.length <= 0) {
+        var wrapper = btn.parentNode;
+        if (wrapper) wrapper.hidden = true;
+      }
+
+      if (toReveal.length) {
+        var firstTrigger = toReveal[0].querySelector(".gallery-trigger");
+        if (firstTrigger) firstTrigger.focus();
       }
     });
   })();
