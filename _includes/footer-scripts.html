@@ -191,10 +191,11 @@
     var fmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
     function calc() {
-      var g = parseFloat(peso.value);
-      var h = parseFloat(tempo.value);
+      var g = parseFloat(String(peso.value).replace(",", "."));
+      var h = parseFloat(String(tempo.value).replace(",", "."));
       if (!isFinite(g) || !isFinite(h) || g <= 0 || h <= 0) {
         out.textContent = "Preencha os campos";
+        out.classList.remove("has-value");
         return;
       }
       var filamento = (g / 1000) * parseFloat(d.filamentoKg);
@@ -203,6 +204,7 @@
       var subtotal = filamento + energia + desgaste;
       var total = subtotal * (1 + parseFloat(d.margemPct) / 100) + parseFloat(d.montagem);
       out.textContent = fmt.format(total);
+      out.classList.add("has-value");
     }
 
     form.addEventListener("input", calc);

@@ -1567,8 +1567,14 @@ body.gallery-modal-open {
 .calc-result {
   display: block;
   margin-top: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.calc-result.has-value {
   font-size: 2rem;
   font-weight: 800;
+  color: transparent;
   background: var(--gradient);
   -webkit-background-clip: text;
   background-clip: text;
