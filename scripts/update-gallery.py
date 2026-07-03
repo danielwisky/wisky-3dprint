@@ -87,7 +87,9 @@ def collect_posts():
             if not code or not image_url:
                 continue
             post_type = "reel" if item.get("product_type") == "clips" else "p"
-            posts.append({"code": code, "type": post_type, "image_url": image_url})
+            caption_obj = item.get("caption") or {}
+            caption = (caption_obj.get("text") or "").replace("\n", " ").strip()
+            posts.append({"code": code, "type": post_type, "image_url": image_url, "caption": caption})
 
         if not data.get("more_available") or not data.get("next_max_id"):
             break
@@ -145,11 +147,18 @@ def main():
             warnings.append(f"  {code}: falha no download ({exc})")
             continue
 
+        alt = post.get("caption", "")
+        if len(alt) > 150:
+            alt = alt[:147].rstrip() + "..."
+        alt = alt.replace("\\", " ").replace('"', "'")
+
         lines += [
             f'  - id: "{code}"',
             f'    type: "{post_type}"',
             f'    image: "{web_path}"',
         ]
+        if alt:
+            lines.append(f'    caption: "{alt}"')
         image_paths.append(image_path)
 
     with open(DATA_FILE, "w", encoding="utf-8") as data_file:

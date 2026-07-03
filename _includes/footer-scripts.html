@@ -59,7 +59,8 @@
       modalImage.src = trigger.dataset.galleryImage;
       modalImage.alt = trigger.querySelector("img").alt;
       modalLink.href = trigger.dataset.galleryUrl;
-      modalTitle.textContent = "Publicação " + (currentIndex + 1) + " de " + total;
+      var caption = trigger.dataset.galleryCaption;
+      modalTitle.textContent = caption && caption.length ? caption : "Publicação " + (currentIndex + 1) + " de " + total;
 
       var hideNav = total <= 1;
       prevBtn.hidden = hideNav;
