@@ -1,0 +1,699 @@
+=== commits na branch ===
+39ed3ce feat: alt único na galeria a partir da legenda do Instagram
+eaf3c51 feat: adiciona estrutura de depoimentos (oculta enquanto vazia)
+2ceb3dd feat: adiciona JSON-LD (Service + FAQPage) para SEO
+a9583be feat: adiciona seção de FAQ
+04b7f02 feat: adiciona calculadora de estimativa de preço
+d47696d feat: adiciona WhatsApp como CTA principal
+
+=== stat ===
+ _config.yml                     |  12 ++++
+ _data/depoimentos.yml           |   7 +++
+ _data/faq.yml                   |  12 ++++
+ _includes/depoimentos.html      |   8 +++
+ _includes/faq.html              |  13 +++++
+ _includes/footer-scripts.html   |  32 +++++++++-
+ _includes/footer.html           |   1 +
+ _includes/head.html             |   1 +
+ _includes/instagram-feed.html   |   6 +-
+ _includes/instagram-post.html   |   4 +-
+ _includes/navbar.html           |   5 +-
+ _includes/price-calculator.html |  24 ++++++++
+ _includes/structured-data.html  |  30 ++++++++++
+ _includes/whatsapp-link.html    |   9 +++
+ assets/css/style.scss           | 126 ++++++++++++++++++++++++++++++++++++++++
+ index.html                      |  52 +++++++++++++----
+ scripts/update-gallery.py       |  11 +++-
+ 17 files changed, 333 insertions(+), 20 deletions(-)
+
+=== diff completo ===
+diff --git a/_config.yml b/_config.yml
+index d6dde21..ee66f02 100644
+--- a/_config.yml
++++ b/_config.yml
+@@ -7,12 +7,16 @@ image: "/assets/img/og-image.jpg"
+ 
+ instagram:
+   username: "wisky.3dprint"
+   profile_url: "https://www.instagram.com/wisky.3dprint"
+   max_posts: 24
+ 
++whatsapp:
++  number: "5511986349616"
++  message: "Olá! Vim pelo site da Wisky 3D Print. Quero um orçamento — segue o link do modelo no MakerWorld: "
++
+ gallery:
+   initial: 12   # quantos posts aparecem antes de clicar em "Carregar mais"
+   batch: 12     # quantos posts cada clique revela
+ 
+ makerworld_url: "https://makerworld.com/en"
+ 
+@@ -24,11 +28,19 @@ kramdown:
+   input: GFM
+ 
+ plugins:
+   - jekyll-seo-tag
+   - jekyll-sitemap
+ 
++calculadora:
++  custo_filamento_kg: 129
++  potencia_w: 80
++  tarifa_kwh: 0.80
++  desgaste: 2.00
++  margem_pct: 100
++  montagem: 20
++
+ exclude:
+   - Gemfile
+   - Gemfile.lock
+   - README.md
+   - scripts
+diff --git a/_data/depoimentos.yml b/_data/depoimentos.yml
+new file mode 100644
+index 0000000..4eac985
+--- /dev/null
++++ b/_data/depoimentos.yml
+@@ -0,0 +1,7 @@
++# Preencha para exibir a seção de depoimentos no site.
++# A seção fica escondida enquanto esta lista estiver vazia.
++# Exemplo:
++# - nome: "Maria S."
++#   texto: "Peça impecável e entrega rápida. Recomendo!"
++# - nome: "João P."
++#   texto: "Atendimento ótimo pelo WhatsApp, ficou exatamente como eu queria."
+diff --git a/_data/faq.yml b/_data/faq.yml
+new file mode 100644
+index 0000000..080738a
+--- /dev/null
++++ b/_data/faq.yml
+@@ -0,0 +1,12 @@
++- pergunta: "Quanto custa uma peça?"
++  resposta: "O preço depende do peso e do tempo de impressão do modelo. Use a calculadora de estimativa aqui no site para ter uma ideia rápida — o valor final é confirmado no WhatsApp."
++- pergunta: "Qual material vocês usam?"
++  resposta: "Imprimimos em PLA, um plástico resistente e com bom acabamento, ideal para a maioria das peças decorativas e funcionais."
++- pergunta: "Qual o prazo de entrega?"
++  resposta: "Em média de 3 a 7 dias após a aprovação do orçamento, dependendo da fila e do tamanho da peça."
++- pergunta: "Vocês entregam em todo o Brasil?"
++  resposta: "Sim! Enviamos pelos Correios para todo o Brasil. O frete é combinado junto com o orçamento no WhatsApp."
++- pergunta: "Tem tamanho máximo de peça?"
++  resposta: "Não há um limite fixo — avaliamos cada modelo. Peças maiores podem ser impressas em partes e montadas."
++- pergunta: "Quais cores estão disponíveis?"
++  resposta: "Você escolhe a cor e o acabamento que quiser; verificamos a disponibilidade sob consulta no WhatsApp."
+diff --git a/_includes/depoimentos.html b/_includes/depoimentos.html
+new file mode 100644
+index 0000000..03662cd
+--- /dev/null
++++ b/_includes/depoimentos.html
+@@ -0,0 +1,8 @@
++<div class="depoimentos-grid reveal-stagger">
++  {%- for item in site.data.depoimentos -%}
++  <figure class="depoimento-card">
++    <blockquote>{{ item.texto }}</blockquote>
++    <figcaption>{{ item.nome }}</figcaption>
++  </figure>
++  {%- endfor -%}
++</div>
+diff --git a/_includes/faq.html b/_includes/faq.html
+new file mode 100644
+index 0000000..f2d305e
+--- /dev/null
++++ b/_includes/faq.html
+@@ -0,0 +1,13 @@
++<div class="faq-list reveal-stagger">
++  {%- for item in site.data.faq -%}
++  <details class="faq-item">
++    <summary>
++      <span>{{ item.pergunta }}</span>
++      <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
++        <path d="M6 9l6 6 6-6"/>
++      </svg>
++    </summary>
++    <div class="faq-answer">{{ item.resposta | markdownify }}</div>
++  </details>
++  {%- endfor -%}
++</div>
+diff --git a/_includes/footer-scripts.html b/_includes/footer-scripts.html
+index ff2522d..dd59f73 100644
+--- a/_includes/footer-scripts.html
++++ b/_includes/footer-scripts.html
+@@ -56,13 +56,14 @@
+       currentIndex = (index + total) % total;
+       var trigger = triggers[currentIndex];
+ 
+       modalImage.src = trigger.dataset.galleryImage;
+       modalImage.alt = trigger.querySelector("img").alt;
+       modalLink.href = trigger.dataset.galleryUrl;
+-      modalTitle.textContent = "Publicação " + (currentIndex + 1) + " de " + total;
++      var caption = trigger.dataset.galleryCaption;
++      modalTitle.textContent = caption && caption.length ? caption : "Publicação " + (currentIndex + 1) + " de " + total;
+ 
+       var hideNav = total <= 1;
+       prevBtn.hidden = hideNav;
+       nextBtn.hidden = hideNav;
+     }
+ 
+@@ -176,12 +177,41 @@
+       rootMargin: "0px 0px -60px 0px"
+     });
+ 
+     targets.forEach(function (el) { observer.observe(el); });
+   })();
+ 
++  (function () {
++    var form = document.getElementById("price-calc");
++    if (!form) return;
++
++    var peso = document.getElementById("calc-peso");
++    var tempo = document.getElementById("calc-tempo");
++    var out = document.getElementById("calc-result");
++    var d = form.dataset;
++    var fmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
++
++    function calc() {
++      var g = parseFloat(peso.value);
++      var h = parseFloat(tempo.value);
++      if (!isFinite(g) || !isFinite(h) || g <= 0 || h <= 0) {
++        out.textContent = "—";
++        return;
++      }
++      var filamento = (g / 1000) * parseFloat(d.filamentoKg);
++      var energia = (parseFloat(d.potenciaW) * h / 1000) * parseFloat(d.tarifaKwh);
++      var desgaste = parseFloat(d.desgaste);
++      var subtotal = filamento + energia + desgaste;
++      var total = subtotal * (1 + parseFloat(d.margemPct) / 100) + parseFloat(d.montagem);
++      out.textContent = fmt.format(total);
++    }
++
++    form.addEventListener("input", calc);
++    form.addEventListener("submit", function (e) { e.preventDefault(); calc(); });
++  })();
++
+   (function () {
+     var btn = document.querySelector(".theme-toggle");
+     if (!btn) return;
+ 
+     var themeMeta = document.querySelector('meta[name="theme-color"]');
+     var THEME_COLOR = { light: "#faf6f1", dark: "#070b12" };
+diff --git a/_includes/footer.html b/_includes/footer.html
+index b369bd0..c126106 100644
+--- a/_includes/footer.html
++++ b/_includes/footer.html
+@@ -5,12 +5,13 @@
+         <span class="site-logo-mark">W3</span>
+         <p>Sob encomenda: do modelo 3D à peça pronta na sua mão.</p>
+       </div>
+       <div class="footer-links">
+         <a href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">MakerWorld</a>
+         <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">Instagram</a>
++        <a href="https://wa.me/{{ site.whatsapp.number }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+         <a href="#como-funciona">Como funciona</a>
+       </div>
+     </div>
+     <p class="footer-copy">© {{ site.time | date: '%Y' }} {{ site.title }}</p>
+   </div>
+ </footer>
+diff --git a/_includes/head.html b/_includes/head.html
+index 6947a28..6b504f8 100644
+--- a/_includes/head.html
++++ b/_includes/head.html
+@@ -18,12 +18,13 @@
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=optional" rel="stylesheet">
+   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%y%m%d%H%M%S' }}">
+ 
+   {% seo %}
++  {% include structured-data.html %}
+ 
+   <meta property="og:image:width" content="1200">
+   <meta property="og:image:height" content="630">
+   <meta property="og:image:type" content="image/jpeg">
+   <meta name="twitter:card" content="summary_large_image">
+ 
+diff --git a/_includes/instagram-feed.html b/_includes/instagram-feed.html
+index 1f60010..12b2d9f 100644
+--- a/_includes/instagram-feed.html
++++ b/_includes/instagram-feed.html
+@@ -1,17 +1,17 @@
+ {% assign posts = site.data.instagram_posts.posts %}
+-{% assign max_posts = site.instagram.max_posts | default: 8 %}
++{% assign max_posts = site.instagram.max_posts | default: 24 %}
+ {% assign initial = site.gallery.initial | default: 12 %}
+ 
+ {% if posts.size > 0 %}
+ <div class="gallery-grid reveal-stagger">
+   {% for post in posts limit: max_posts %}
+     {% if forloop.index0 >= initial %}
+-      {% include instagram-post.html id=post.id type=post.type image=post.image hidden=true %}
++      {% include instagram-post.html id=post.id type=post.type image=post.image caption=post.caption hidden=true %}
+     {% else %}
+-      {% include instagram-post.html id=post.id type=post.type image=post.image %}
++      {% include instagram-post.html id=post.id type=post.type image=post.image caption=post.caption %}
+     {% endif %}
+   {% endfor %}
+ </div>
+ {% assign shown = posts.size %}
+ {% if shown > max_posts %}{% assign shown = max_posts %}{% endif %}
+ {% if shown > initial %}
+diff --git a/_includes/instagram-post.html b/_includes/instagram-post.html
+index e5811d4..bfe5e9e 100644
+--- a/_includes/instagram-post.html
++++ b/_includes/instagram-post.html
+@@ -3,18 +3,20 @@
+ <article class="gallery-item{% if include.hidden %} is-gallery-hidden{% endif %}"{% if include.hidden %} hidden{% endif %}>
+   <button
+     type="button"
+     class="gallery-trigger"
+     data-gallery-image="{{ include.image | relative_url }}"
+     data-gallery-url="{{ post_url }}"
++    data-gallery-caption="{{ include.caption }}"
+     aria-label="Ampliar publicação do Instagram"
+   >
++    {%- assign img_alt = include.caption | default: "Trabalho impresso em 3D por @" | append: site.instagram.username -%}
+     <img
+       class="gallery-image"
+       src="{{ include.image | relative_url }}"
+-      alt="Trabalho impresso em 3D por @{{ site.instagram.username }}"
++      alt="{{ img_alt }}"
+       loading="lazy"
+       decoding="async"
+     >
+     <span class="gallery-overlay" aria-hidden="true">
+       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+         <path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/>
+diff --git a/_includes/navbar.html b/_includes/navbar.html
+index 2ad4975..0450538 100644
+--- a/_includes/navbar.html
++++ b/_includes/navbar.html
+@@ -7,12 +7,13 @@
+     <button class="site-nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Abrir menu">
+       <span></span><span></span><span></span>
+     </button>
+     <ul class="site-nav-menu" id="site-nav-menu">
+       <li><a href="#como-funciona">Como funciona</a></li>
+       <li><a href="#galeria">Galeria</a></li>
++      <li><a href="#faq">Dúvidas</a></li>
+       <li><a href="#contato">Orçamento</a></li>
+       <li>
+         <button class="theme-toggle" type="button" aria-label="Alternar tema">
+           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+             <circle cx="12" cy="12" r="4"/>
+             <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+@@ -20,13 +21,11 @@
+           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+           </svg>
+         </button>
+       </li>
+       <li>
+-        <a class="nav-cta" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+-          @{{ site.instagram.username }}
+-        </a>
++        {% include whatsapp-link.html class="nav-cta" label="WhatsApp" %}
+       </li>
+     </ul>
+   </div>
+ </nav>
+diff --git a/_includes/price-calculator.html b/_includes/price-calculator.html
+new file mode 100644
+index 0000000..97bb748
+--- /dev/null
++++ b/_includes/price-calculator.html
+@@ -0,0 +1,24 @@
++<form id="price-calc" class="calc reveal"
++  data-filamento-kg="{{ site.calculadora.custo_filamento_kg }}"
++  data-potencia-w="{{ site.calculadora.potencia_w }}"
++  data-tarifa-kwh="{{ site.calculadora.tarifa_kwh }}"
++  data-desgaste="{{ site.calculadora.desgaste }}"
++  data-margem-pct="{{ site.calculadora.margem_pct }}"
++  data-montagem="{{ site.calculadora.montagem }}">
++  <div class="calc-fields">
++    <div class="calc-field">
++      <label for="calc-peso">Peso da peça (g)</label>
++      <input type="number" id="calc-peso" name="peso" min="0" step="1" inputmode="decimal" placeholder="ex: 50">
++    </div>
++    <div class="calc-field">
++      <label for="calc-tempo">Tempo de impressão (h)</label>
++      <input type="number" id="calc-tempo" name="tempo" min="0" step="0.1" inputmode="decimal" placeholder="ex: 4">
++    </div>
++  </div>
++  <div class="calc-result-box">
++    <span class="calc-result-label">Estimativa</span>
++    <output id="calc-result" class="calc-result" for="calc-peso calc-tempo">—</output>
++  </div>
++  <p class="calc-disclaimer">Valor apenas uma estimativa. O orçamento final é confirmado no WhatsApp, conforme o modelo escolhido.</p>
++  {% include whatsapp-link.html class="btn btn-gradient" label="Pedir orçamento no WhatsApp" %}
++</form>
+diff --git a/_includes/structured-data.html b/_includes/structured-data.html
+new file mode 100644
+index 0000000..0d466fe
+--- /dev/null
++++ b/_includes/structured-data.html
+@@ -0,0 +1,30 @@
++<script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "ProfessionalService",
++  "name": {{ site.title | jsonify }},
++  "description": {{ site.description | jsonify }},
++  "url": {{ site.url | jsonify }},
++  "image": {{ site.url | append: site.image | jsonify }},
++  "areaServed": { "@type": "Country", "name": "Brasil" },
++  "serviceType": "Impressão 3D sob encomenda",
++  "sameAs": [ {{ site.instagram.profile_url | jsonify }} ]
++}
++</script>
++{%- if site.data.faq and site.data.faq.size > 0 %}
++<script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "FAQPage",
++  "mainEntity": [
++    {%- for item in site.data.faq %}
++    {
++      "@type": "Question",
++      "name": {{ item.pergunta | jsonify }},
++      "acceptedAnswer": { "@type": "Answer", "text": {{ item.resposta | jsonify }} }
++    }{% unless forloop.last %},{% endunless %}
++    {%- endfor %}
++  ]
++}
++</script>
++{%- endif %}
+diff --git a/_includes/whatsapp-link.html b/_includes/whatsapp-link.html
+new file mode 100644
+index 0000000..924f54f
+--- /dev/null
++++ b/_includes/whatsapp-link.html
+@@ -0,0 +1,9 @@
++{%- assign wa_message = include.message | default: site.whatsapp.message -%}
++{%- assign wa_class = include.class | default: "btn btn-gradient" -%}
++{%- assign wa_label = include.label | default: "Pedir orçamento no WhatsApp" -%}
++<a class="{{ wa_class }}" href="https://wa.me/{{ site.whatsapp.number }}?text={{ wa_message | url_encode }}" target="_blank" rel="noopener noreferrer">
++  <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="18" height="18">
++    <path d="M17.5 14.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35zM12 2a10 10 0 00-8.6 15.05L2 22l5.05-1.32A10 10 0 1012 2z"/>
++  </svg>
++  <span>{{ wa_label }}</span>
++</a>
+diff --git a/assets/css/style.scss b/assets/css/style.scss
+index 36d9b52..01ee92c 100644
+--- a/assets/css/style.scss
++++ b/assets/css/style.scss
+@@ -1511,6 +1511,132 @@ body.gallery-modal-open {
+     animation-duration: 0.01ms !important;
+     animation-iteration-count: 1 !important;
+     transition-duration: 0.01ms !important;
+     scroll-behavior: auto !important;
+   }
+ }
++
++.section-calc { background: var(--section-tint); }
++
++.calc {
++  max-width: 640px;
++  margin: 0 auto;
++  padding: 2rem;
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: 20px;
++  box-shadow: 0 20px 40px -30px var(--shadow-soft);
++}
++.calc-fields {
++  display: grid;
++  grid-template-columns: 1fr 1fr;
++  gap: 1rem;
++}
++@media (max-width: 520px) {
++  .calc-fields { grid-template-columns: 1fr; }
++}
++.calc-field { display: flex; flex-direction: column; gap: 0.4rem; }
++.calc-field label { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
++.calc-field input {
++  padding: 0.7rem 0.9rem;
++  background: var(--surface-soft);
++  border: 1px solid var(--border-strong);
++  border-radius: 12px;
++  color: var(--text);
++  font: inherit;
++}
++.calc-field input:focus-visible {
++  outline: none;
++  border-color: var(--cyan);
++}
++.calc-result-box {
++  margin-top: 1.5rem;
++  padding: 1.25rem;
++  text-align: center;
++  background: var(--surface-soft);
++  border-radius: 14px;
++}
++.calc-result-label {
++  display: block;
++  font-size: 0.75rem;
++  text-transform: uppercase;
++  letter-spacing: 0.08em;
++  color: var(--muted);
++}
++.calc-result {
++  display: block;
++  margin-top: 0.25rem;
++  font-size: 2rem;
++  font-weight: 800;
++  background: var(--gradient);
++  -webkit-background-clip: text;
++  background-clip: text;
++  -webkit-text-fill-color: transparent;
++}
++.calc-disclaimer {
++  margin: 1rem 0 1.25rem;
++  font-size: 0.8rem;
++  color: var(--muted-soft);
++  text-align: center;
++}
++.calc .btn { width: 100%; }
++
++.faq-list {
++  max-width: 720px;
++  margin: 0 auto;
++  display: flex;
++  flex-direction: column;
++  gap: 0.75rem;
++}
++.faq-item {
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: 14px;
++  overflow: hidden;
++}
++.faq-item summary {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 1rem;
++  padding: 1.1rem 1.3rem;
++  cursor: pointer;
++  font-weight: 600;
++  color: var(--text);
++  list-style: none;
++}
++.faq-item summary::-webkit-details-marker { display: none; }
++.faq-item summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
++.faq-chevron {
++  flex-shrink: 0;
++  width: 20px;
++  height: 20px;
++  color: var(--muted);
++  transition: transform 0.25s ease;
++}
++.faq-item[open] .faq-chevron { transform: rotate(180deg); }
++.faq-answer {
++  padding: 0 1.3rem 1.2rem;
++  color: var(--muted);
++  line-height: 1.6;
++}
++.faq-answer p { margin: 0; }
++
++.depoimentos-grid {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
++  gap: 1.25rem;
++}
++.depoimento-card {
++  margin: 0;
++  padding: 1.5rem;
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: 16px;
++}
++.depoimento-card blockquote {
++  margin: 0 0 1rem;
++  color: var(--text);
++  line-height: 1.6;
++}
++.depoimento-card blockquote::before { content: "\201C"; color: var(--cyan); font-weight: 800; }
++.depoimento-card figcaption { color: var(--muted); font-weight: 600; font-size: 0.9rem; }
+diff --git a/index.html b/index.html
+index 028b12f..3bbb324 100644
+--- a/index.html
++++ b/index.html
+@@ -17,21 +17,19 @@ title: "Wisky 3D Print"
+     <p class="hero-eyebrow">Impressão 3D · Sob encomenda</p>
+     <h1 class="hero-title">
+       Transforme <em>modelos digitais</em> em objetos reais
+     </h1>
+     <p class="hero-lead">
+       Encontrou algo no MakerWorld? Imprimimos com qualidade, acabamento cuidadoso
+-      e combinamos a entrega pelo Instagram.
++      e combinamos tudo pelo WhatsApp.
+     </p>
+     <div class="hero-actions">
+-      <a class="btn btn-gradient" href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">
++      {% include whatsapp-link.html class="btn btn-gradient" label="Pedir orçamento no WhatsApp" %}
++      <a class="btn btn-ghost" href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">
+         Explorar MakerWorld
+       </a>
+-      <a class="btn btn-ghost" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+-        Pedir orçamento
+-      </a>
+     </div>
+     <dl class="hero-stats">
+       <div>
+         <dt>Modelos</dt>
+         <dd>Qualquer modelo do MakerWorld</dd>
+       </div>
+@@ -90,14 +88,14 @@ title: "Wisky 3D Print"
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+             <path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z"/>
+           </svg>
+         </div>
+         <div class="step-content">
+           <span class="step-label">Passo 03</span>
+-          <h3>Envie no Instagram</h3>
+-          <p>Envie o link para <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer"><strong>@{{ site.instagram.username }}</strong></a> informando cor, tamanho e quantidade.</p>
++          <h3>Envie no WhatsApp</h3>
++          <p>Mande o link para o nosso <a href="https://wa.me/{{ site.whatsapp.number }}" target="_blank" rel="noopener noreferrer"><strong>WhatsApp</strong></a> informando cor, tamanho e quantidade.</p>
+         </div>
+       </li>
+       <li class="step-pipeline-item">
+         <div class="step-marker step-marker-finish" aria-hidden="true">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+             <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+@@ -111,12 +109,23 @@ title: "Wisky 3D Print"
+         </div>
+       </li>
+     </ol>
+   </div>
+ </section>
+ 
++<section id="estimativa" class="section section-calc">
++  <div class="container">
++    <header class="section-header section-header-center reveal">
++      <span class="section-tag">Estimativa</span>
++      <h2>Calcule o preço aproximado</h2>
++      <p>Informe o peso e o tempo de impressão do modelo para uma estimativa rápida.</p>
++    </header>
++    {% include price-calculator.html %}
++  </div>
++</section>
++
+ <section id="galeria" class="section section-gallery">
+   <div class="container">
+     <header class="section-header section-header-center reveal">
+       <span class="section-tag">Portfólio</span>
+       <h2>Trabalhos recentes</h2>
+       <p>Peças e projetos publicados no nosso Instagram.</p>
+@@ -129,23 +138,44 @@ title: "Wisky 3D Print"
+         Ver todos em @{{ site.instagram.username }} →
+       </a>
+     </p>
+   </div>
+ </section>
+ 
++<section id="faq" class="section section-faq">
++  <div class="container">
++    <header class="section-header section-header-center reveal">
++      <span class="section-tag">Dúvidas</span>
++      <h2>Perguntas frequentes</h2>
++      <p>As respostas rápidas antes de você chamar no WhatsApp.</p>
++    </header>
++    {% include faq.html %}
++  </div>
++</section>
++
++{%- if site.data.depoimentos and site.data.depoimentos.size > 0 -%}
++<section id="depoimentos" class="section section-depoimentos">
++  <div class="container">
++    <header class="section-header section-header-center reveal">
++      <span class="section-tag">Depoimentos</span>
++      <h2>O que dizem os clientes</h2>
++    </header>
++    {% include depoimentos.html %}
++  </div>
++</section>
++{%- endif -%}
++
+ <section id="contato" class="section section-cta">
+   <div class="container">
+     <div class="cta-panel reveal">
+       <div class="cta-panel-glow" aria-hidden="true"></div>
+       <div class="cta-panel-content">
+         <span class="section-tag">Orçamento</span>
+         <h2>Pronto para imprimir?</h2>
+-        <p>Envie o link do modelo no Instagram e receba seu orçamento personalizado.</p>
+-        <a class="btn btn-gradient btn-lg" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+-          Chamar @{{ site.instagram.username }}
+-        </a>
++        <p>Envie o link do modelo no WhatsApp e receba seu orçamento personalizado.</p>
++        {% include whatsapp-link.html class="btn btn-gradient btn-lg" label="Chamar no WhatsApp" %}
+       </div>
+       <div class="cta-panel-visual" aria-hidden="true">
+         <div class="filament-ring"></div>
+         <div class="filament-core"></div>
+       </div>
+     </div>
+diff --git a/scripts/update-gallery.py b/scripts/update-gallery.py
+index 8a76a62..4c5799b 100644
+--- a/scripts/update-gallery.py
++++ b/scripts/update-gallery.py
+@@ -84,13 +84,15 @@ def collect_posts():
+         for item in items:
+             code = item.get("code")
+             image_url = _pick_image_url(item)
+             if not code or not image_url:
+                 continue
+             post_type = "reel" if item.get("product_type") == "clips" else "p"
+-            posts.append({"code": code, "type": post_type, "image_url": image_url})
++            caption_obj = item.get("caption") or {}
++            caption = (caption_obj.get("text") or "").replace("\n", " ").strip()
++            posts.append({"code": code, "type": post_type, "image_url": image_url, "caption": caption})
+ 
+         if not data.get("more_available") or not data.get("next_max_id"):
+             break
+         max_id = data["next_max_id"]
+ 
+     return posts[:MAX_POSTS]
+@@ -142,17 +144,24 @@ def main():
+             with open(image_path, "wb") as img_file:
+                 img_file.write(content)
+         except Exception as exc:
+             warnings.append(f"  {code}: falha no download ({exc})")
+             continue
+ 
++        alt = post.get("caption", "")
++        if len(alt) > 150:
++            alt = alt[:147].rstrip() + "..."
++        alt = alt.replace("\\", " ").replace('"', "'")
++
+         lines += [
+             f'  - id: "{code}"',
+             f'    type: "{post_type}"',
+             f'    image: "{web_path}"',
+         ]
++        if alt:
++            lines.append(f'    caption: "{alt}"')
+         image_paths.append(image_path)
+ 
+     with open(DATA_FILE, "w", encoding="utf-8") as data_file:
+         data_file.write("\n".join(lines) + "\n")
+ 
+     print(f"Atualizado: {len(image_paths)} posts em {GALLERY_DIR}")

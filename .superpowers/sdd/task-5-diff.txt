@@ -1,0 +1,91 @@
+=== commits ===
+eaf3c51 feat: adiciona estrutura de depoimentos (oculta enquanto vazia)
+
+=== diff ===
+diff --git a/_data/depoimentos.yml b/_data/depoimentos.yml
+new file mode 100644
+index 0000000..4eac985
+--- /dev/null
++++ b/_data/depoimentos.yml
+@@ -0,0 +1,7 @@
++# Preencha para exibir a seção de depoimentos no site.
++# A seção fica escondida enquanto esta lista estiver vazia.
++# Exemplo:
++# - nome: "Maria S."
++#   texto: "Peça impecável e entrega rápida. Recomendo!"
++# - nome: "João P."
++#   texto: "Atendimento ótimo pelo WhatsApp, ficou exatamente como eu queria."
+diff --git a/_includes/depoimentos.html b/_includes/depoimentos.html
+new file mode 100644
+index 0000000..03662cd
+--- /dev/null
++++ b/_includes/depoimentos.html
+@@ -0,0 +1,8 @@
++<div class="depoimentos-grid reveal-stagger">
++  {%- for item in site.data.depoimentos -%}
++  <figure class="depoimento-card">
++    <blockquote>{{ item.texto }}</blockquote>
++    <figcaption>{{ item.nome }}</figcaption>
++  </figure>
++  {%- endfor -%}
++</div>
+diff --git a/assets/css/style.scss b/assets/css/style.scss
+index 5b3d158..01ee92c 100644
+--- a/assets/css/style.scss
++++ b/assets/css/style.scss
+@@ -1617,6 +1617,26 @@ body.gallery-modal-open {
+ .faq-answer {
+   padding: 0 1.3rem 1.2rem;
+   color: var(--muted);
+   line-height: 1.6;
+ }
+ .faq-answer p { margin: 0; }
++
++.depoimentos-grid {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
++  gap: 1.25rem;
++}
++.depoimento-card {
++  margin: 0;
++  padding: 1.5rem;
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: 16px;
++}
++.depoimento-card blockquote {
++  margin: 0 0 1rem;
++  color: var(--text);
++  line-height: 1.6;
++}
++.depoimento-card blockquote::before { content: "\201C"; color: var(--cyan); font-weight: 800; }
++.depoimento-card figcaption { color: var(--muted); font-weight: 600; font-size: 0.9rem; }
+diff --git a/index.html b/index.html
+index 91c49c5..3bbb324 100644
+--- a/index.html
++++ b/index.html
+@@ -149,12 +149,24 @@ title: "Wisky 3D Print"
+       <p>As respostas rápidas antes de você chamar no WhatsApp.</p>
+     </header>
+     {% include faq.html %}
+   </div>
+ </section>
+ 
++{%- if site.data.depoimentos and site.data.depoimentos.size > 0 -%}
++<section id="depoimentos" class="section section-depoimentos">
++  <div class="container">
++    <header class="section-header section-header-center reveal">
++      <span class="section-tag">Depoimentos</span>
++      <h2>O que dizem os clientes</h2>
++    </header>
++    {% include depoimentos.html %}
++  </div>
++</section>
++{%- endif -%}
++
+ <section id="contato" class="section section-cta">
+   <div class="container">
+     <div class="cta-panel reveal">
+       <div class="cta-panel-glow" aria-hidden="true"></div>
+       <div class="cta-panel-content">
+         <span class="section-tag">Orçamento</span>

@@ -1,0 +1,139 @@
+=== commits ===
+34dcd23 feat: alt único na galeria a partir da legenda do Instagram
+
+=== diff ===
+diff --git a/_includes/footer-scripts.html b/_includes/footer-scripts.html
+index b15d0e9..dd59f73 100644
+--- a/_includes/footer-scripts.html
++++ b/_includes/footer-scripts.html
+@@ -54,17 +54,18 @@
+     function showAt(index) {
+       var total = triggers.length;
+       currentIndex = (index + total) % total;
+       var trigger = triggers[currentIndex];
+ 
+       modalImage.src = trigger.dataset.galleryImage;
+       modalImage.alt = trigger.querySelector("img").alt;
+       modalLink.href = trigger.dataset.galleryUrl;
+-      modalTitle.textContent = "Publicação " + (currentIndex + 1) + " de " + total;
++      var caption = trigger.dataset.galleryCaption;
++      modalTitle.textContent = caption && caption.length ? caption : "Publicação " + (currentIndex + 1) + " de " + total;
+ 
+       var hideNav = total <= 1;
+       prevBtn.hidden = hideNav;
+       nextBtn.hidden = hideNav;
+     }
+ 
+     function openModal(trigger) {
+       refreshTriggers();
+diff --git a/_includes/instagram-feed.html b/_includes/instagram-feed.html
+index 1f60010..12b2d9f 100644
+--- a/_includes/instagram-feed.html
++++ b/_includes/instagram-feed.html
+@@ -1,19 +1,19 @@
+ {% assign posts = site.data.instagram_posts.posts %}
+-{% assign max_posts = site.instagram.max_posts | default: 8 %}
++{% assign max_posts = site.instagram.max_posts | default: 24 %}
+ {% assign initial = site.gallery.initial | default: 12 %}
+ 
+ {% if posts.size > 0 %}
+ <div class="gallery-grid reveal-stagger">
+   {% for post in posts limit: max_posts %}
+     {% if forloop.index0 >= initial %}
+-      {% include instagram-post.html id=post.id type=post.type image=post.image hidden=true %}
++      {% include instagram-post.html id=post.id type=post.type image=post.image caption=post.caption hidden=true %}
+     {% else %}
+-      {% include instagram-post.html id=post.id type=post.type image=post.image %}
++      {% include instagram-post.html id=post.id type=post.type image=post.image caption=post.caption %}
+     {% endif %}
+   {% endfor %}
+ </div>
+ {% assign shown = posts.size %}
+ {% if shown > max_posts %}{% assign shown = max_posts %}{% endif %}
+ {% if shown > initial %}
+ <div class="gallery-loadmore">
+   <button type="button" class="gallery-loadmore-btn" data-gallery-batch="{{ site.gallery.batch | default: 12 }}">
+diff --git a/_includes/instagram-post.html b/_includes/instagram-post.html
+index e5811d4..bfe5e9e 100644
+--- a/_includes/instagram-post.html
++++ b/_includes/instagram-post.html
+@@ -1,22 +1,24 @@
+ {% assign post_type = include.type | default: "p" %}
+ {% assign post_url = "https://www.instagram.com/" | append: post_type | append: "/" | append: include.id | append: "/" %}
+ <article class="gallery-item{% if include.hidden %} is-gallery-hidden{% endif %}"{% if include.hidden %} hidden{% endif %}>
+   <button
+     type="button"
+     class="gallery-trigger"
+     data-gallery-image="{{ include.image | relative_url }}"
+     data-gallery-url="{{ post_url }}"
++    data-gallery-caption="{{ include.caption }}"
+     aria-label="Ampliar publicação do Instagram"
+   >
++    {%- assign img_alt = include.caption | default: "Trabalho impresso em 3D por @" | append: site.instagram.username -%}
+     <img
+       class="gallery-image"
+       src="{{ include.image | relative_url }}"
+-      alt="Trabalho impresso em 3D por @{{ site.instagram.username }}"
++      alt="{{ img_alt }}"
+       loading="lazy"
+       decoding="async"
+     >
+     <span class="gallery-overlay" aria-hidden="true">
+       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+         <path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/>
+       </svg>
+     </span>
+diff --git a/scripts/update-gallery.py b/scripts/update-gallery.py
+index 8a76a62..a631dff 100644
+--- a/scripts/update-gallery.py
++++ b/scripts/update-gallery.py
+@@ -82,17 +82,19 @@ def collect_posts():
+             break
+ 
+         for item in items:
+             code = item.get("code")
+             image_url = _pick_image_url(item)
+             if not code or not image_url:
+                 continue
+             post_type = "reel" if item.get("product_type") == "clips" else "p"
+-            posts.append({"code": code, "type": post_type, "image_url": image_url})
++            caption_obj = item.get("caption") or {}
++            caption = (caption_obj.get("text") or "").replace("\n", " ").strip()
++            posts.append({"code": code, "type": post_type, "image_url": image_url, "caption": caption})
+ 
+         if not data.get("more_available") or not data.get("next_max_id"):
+             break
+         max_id = data["next_max_id"]
+ 
+     return posts[:MAX_POSTS]
+ 
+ 
+@@ -140,21 +142,28 @@ def main():
+             if len(content) < MIN_VALID_BYTES:
+                 warnings.append(f"  {code}: download muito pequeno ({len(content)} bytes), pode estar quebrado")
+             with open(image_path, "wb") as img_file:
+                 img_file.write(content)
+         except Exception as exc:
+             warnings.append(f"  {code}: falha no download ({exc})")
+             continue
+ 
++        alt = post.get("caption", "")
++        if len(alt) > 150:
++            alt = alt[:147].rstrip() + "..."
++        alt = alt.replace('"', "'")
++
+         lines += [
+             f'  - id: "{code}"',
+             f'    type: "{post_type}"',
+             f'    image: "{web_path}"',
+         ]
++        if alt:
++            lines.append(f'    caption: "{alt}"')
+         image_paths.append(image_path)
+ 
+     with open(DATA_FILE, "w", encoding="utf-8") as data_file:
+         data_file.write("\n".join(lines) + "\n")
+ 
+     print(f"Atualizado: {len(image_paths)} posts em {GALLERY_DIR}")
+     if warnings:
+         print(f"Avisos ({len(warnings)} entrada(s) com problema):")
