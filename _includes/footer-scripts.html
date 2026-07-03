@@ -194,7 +194,7 @@
       var g = parseFloat(peso.value);
       var h = parseFloat(tempo.value);
       if (!isFinite(g) || !isFinite(h) || g <= 0 || h <= 0) {
-        out.textContent = "—";
+        out.textContent = "Preencha os campos";
         return;
       }
       var filamento = (g / 1000) * parseFloat(d.filamentoKg);
