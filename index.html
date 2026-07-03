@@ -20,12 +20,14 @@ title: "Wisky 3D Print"
     </h1>
     <p class="hero-lead">
       Encontrou algo no MakerWorld? Imprimimos com qualidade, acabamento cuidadoso
-      e combinamos tudo pelo WhatsApp.
+      e combinamos a entrega pelo Instagram.
     </p>
     <div class="hero-actions">
-      {% include whatsapp-link.html class="btn btn-gradient" label="Pedir orçamento no WhatsApp" %}
-      <a class="btn btn-ghost" href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">
+      <a class="btn btn-gradient" href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">
         Explorar MakerWorld
+      </a>
+      <a class="btn btn-ghost" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+        Pedir orçamento
       </a>
     </div>
     <dl class="hero-stats">
@@ -40,8 +42,8 @@ title: "Wisky 3D Print"
       <div>
         <dt>Contato</dt>
         <dd>
-          <a href="https://wa.me/{{ site.whatsapp.number }}" target="_blank" rel="noopener noreferrer">
-            WhatsApp
+          <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+            @{{ site.instagram.username }}
           </a>
         </dd>
       </div>
@@ -91,8 +93,8 @@ title: "Wisky 3D Print"
         </div>
         <div class="step-content">
           <span class="step-label">Passo 03</span>
-          <h3>Envie no WhatsApp</h3>
-          <p>Mande o link para o nosso <a href="https://wa.me/{{ site.whatsapp.number }}" target="_blank" rel="noopener noreferrer"><strong>WhatsApp</strong></a> informando cor, tamanho e quantidade.</p>
+          <h3>Envie no Instagram</h3>
+          <p>Envie o link para <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer"><strong>@{{ site.instagram.username }}</strong></a> informando cor, tamanho e quantidade.</p>
         </div>
       </li>
       <li class="step-pipeline-item">
@@ -104,7 +106,7 @@ title: "Wisky 3D Print"
         </div>
         <div class="step-content">
           <span class="step-label">Passo 04</span>
-          <h3>Receba e imprima</h3>
+          <h3>Orçamento e impressão</h3>
           <p>Retornamos com orçamento, prazo e entrega. Após sua aprovação, a peça vai para a impressora.</p>
         </div>
       </li>
@@ -117,7 +119,7 @@ title: "Wisky 3D Print"
     <header class="section-header section-header-center reveal">
       <span class="section-tag">Estimativa</span>
       <h2>Calcule o preço aproximado</h2>
-      <p>Informe o peso e o tempo de impressão do modelo para uma estimativa rápida.</p>
+      <p>Informe o peso e o tempo de impressão do modelo para uma estimativa rápida. Você encontra esses dados na própria página do modelo no MakerWorld.</p>
     </header>
     {% include price-calculator.html %}
   </div>
@@ -146,7 +148,7 @@ title: "Wisky 3D Print"
     <header class="section-header section-header-center reveal">
       <span class="section-tag">Dúvidas</span>
       <h2>Perguntas frequentes</h2>
-      <p>As respostas rápidas antes de você chamar no WhatsApp.</p>
+      <p>As respostas rápidas antes de você fazer seu pedido.</p>
     </header>
     {% include faq.html %}
   </div>
@@ -170,9 +172,11 @@ title: "Wisky 3D Print"
       <div class="cta-panel-glow" aria-hidden="true"></div>
       <div class="cta-panel-content">
         <span class="section-tag">Orçamento</span>
-        <h2>Pronto para imprimir?</h2>
-        <p>Envie o link do modelo no WhatsApp e receba seu orçamento personalizado.</p>
-        {% include whatsapp-link.html class="btn btn-gradient btn-lg" label="Chamar no WhatsApp" %}
+        <h2>Pronto para tirar sua ideia do papel?</h2>
+        <p>Envie o link do modelo no Instagram e receba seu orçamento personalizado.</p>
+        <a class="btn btn-gradient btn-lg" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+          Chamar @{{ site.instagram.username }}
+        </a>
       </div>
       <div class="cta-panel-visual" aria-hidden="true">
         <div class="filament-ring"></div>

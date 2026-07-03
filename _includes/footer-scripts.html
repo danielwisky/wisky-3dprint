@@ -253,4 +253,51 @@
       });
     }
   })();
+
+  (function () {
+    var triggers = document.querySelectorAll(".img-zoom");
+    if (!triggers.length) return;
+
+    var box = document.getElementById("img-lightbox");
+    if (!box) return;
+
+    var boxImg = document.getElementById("img-lightbox-img");
+    var lastTrigger = null;
+
+    function openBox(trigger) {
+      var img = trigger.querySelector("img");
+      if (!img) return;
+      boxImg.src = img.currentSrc || img.src;
+      boxImg.alt = img.alt;
+      lastTrigger = trigger;
+      box.hidden = false;
+      box.setAttribute("aria-hidden", "false");
+      document.body.classList.add("img-lightbox-open");
+      box.querySelector(".img-lightbox-close").focus();
+    }
+
+    function closeBox() {
+      box.hidden = true;
+      box.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("img-lightbox-open");
+      boxImg.src = "";
+      if (lastTrigger) lastTrigger.focus();
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener("click", function () { openBox(trigger); });
+    });
+
+    box.querySelectorAll("[data-lightbox-close]").forEach(function (el) {
+      el.addEventListener("click", closeBox);
+    });
+
+    box.addEventListener("click", function (event) {
+      if (event.target === box) closeBox();
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (!box.hidden && event.key === "Escape") closeBox();
+    });
+  })();
 </script>
