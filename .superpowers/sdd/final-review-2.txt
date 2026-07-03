@@ -1,0 +1,857 @@
+=== COMMITS 0ab9704..HEAD ===
+e3aa515 fix: replace whatsapp contact with instagram across site
+ac06bcc Merge pull request #1 from danielwisky/feat/portal-improvements
+8fc0d6b chore: remove superpowers plan and spec docs
+017ab7c fix: remove superpowers sdd artifacts
+b824c61 feat: add price calculator, FAQ, WhatsApp CTA and structured data
+5d9090c feat: calculadora aceita vírgula, placeholder discreto com aria-live, e robots.txt
+e32c577 fix: remove travessões dos textos e adiciona link do WhatsApp no orçamento da calculadora
+9280039 fix: calculadora independente, sem botão de WhatsApp
+8c736e0 fix: coerência do CTA WhatsApp no hero-stats e alinhamento do nav-cta
+39ed3ce feat: alt único na galeria a partir da legenda do Instagram
+eaf3c51 feat: adiciona estrutura de depoimentos (oculta enquanto vazia)
+2ceb3dd feat: adiciona JSON-LD (Service + FAQPage) para SEO
+a9583be feat: adiciona seção de FAQ
+04b7f02 feat: adiciona calculadora de estimativa de preço
+d47696d feat: adiciona WhatsApp como CTA principal
+
+=== STAT ===
+ _config.yml                     |   8 ++
+ _data/depoimentos.yml           |   7 ++
+ _data/faq.yml                   |  14 +++
+ _data/instagram_posts.yml       |   6 +-
+ _includes/depoimentos.html      |   8 ++
+ _includes/faq.html              |  13 +++
+ _includes/footer-scripts.html   |  81 ++++++++++++++-
+ _includes/head.html             |   1 +
+ _includes/image-lightbox.html   |   8 ++
+ _includes/instagram-feed.html   |   6 +-
+ _includes/instagram-post.html   |   4 +-
+ _includes/navbar.html           |   1 +
+ _includes/price-calculator.html |  44 +++++++++
+ _includes/structured-data.html  |  30 ++++++
+ _includes/whatsapp-link.html    |   9 ++
+ _layouts/default.html           |   1 +
+ assets/css/style.scss           | 214 ++++++++++++++++++++++++++++++++++++++++
+ index.html                      |  38 ++++++-
+ robots.txt                      |   6 ++
+ scripts/update-gallery.py       |  11 ++-
+ 20 files changed, 499 insertions(+), 11 deletions(-)
+
+=== DIFF (texto, sem binários/scratch) ===
+diff --git a/_config.yml b/_config.yml
+index d6dde21..1b50a89 100644
+--- a/_config.yml
++++ b/_config.yml
+@@ -24,11 +24,19 @@ kramdown:
+   input: GFM
+ 
+ plugins:
+   - jekyll-seo-tag
+   - jekyll-sitemap
+ 
++calculadora:
++  custo_filamento_kg: 129
++  potencia_w: 80
++  tarifa_kwh: 0.80
++  desgaste: 2.00
++  margem_pct: 100
++  montagem: 20
++
+ exclude:
+   - Gemfile
+   - Gemfile.lock
+   - README.md
+   - scripts
+diff --git a/_data/depoimentos.yml b/_data/depoimentos.yml
+new file mode 100644
+index 0000000..c072491
+--- /dev/null
++++ b/_data/depoimentos.yml
+@@ -0,0 +1,7 @@
++# Preencha para exibir a seção de depoimentos no site.
++# A seção fica escondida enquanto esta lista estiver vazia.
++# Exemplo:
++# - nome: "Maria S."
++#   texto: "Peça impecável e entrega rápida. Recomendo!"
++# - nome: "João P."
++#   texto: "Atendimento ótimo, ficou exatamente como eu queria."
+diff --git a/_data/faq.yml b/_data/faq.yml
+new file mode 100644
+index 0000000..b2d2daf
+--- /dev/null
++++ b/_data/faq.yml
+@@ -0,0 +1,14 @@
++- pergunta: "Quanto custa uma peça?"
++  resposta: "O preço depende do peso e do tempo de impressão do modelo. Use a calculadora de estimativa aqui no site para ter uma ideia rápida. O valor final é confirmado no Instagram."
++- pergunta: "Onde encontro o peso e o tempo de impressão do modelo?"
++  resposta: "Na página do modelo no MakerWorld, na seção Print Profile: o tempo aparece ao lado do ícone de relógio, e ao passar o mouse sobre um perfil abre um painel com o peso total do filamento (em gramas). Use esses valores na calculadora de estimativa aqui do site."
++- pergunta: "Qual material vocês usam?"
++  resposta: "Imprimimos em PLA, um plástico resistente e com bom acabamento, ideal para a maioria das peças decorativas e funcionais."
++- pergunta: "Qual o prazo de entrega?"
++  resposta: "Em média de 3 a 7 dias após a aprovação do orçamento, dependendo da fila e do tamanho da peça."
++- pergunta: "Vocês entregam em todo o Brasil?"
++  resposta: "Sim! Enviamos pelos Correios para todo o Brasil. O frete é combinado junto com o orçamento no Instagram."
++- pergunta: "Tem tamanho máximo de peça?"
++  resposta: "Não há um limite fixo, avaliamos cada modelo. Peças maiores podem ser impressas em partes e montadas."
++- pergunta: "Quais cores estão disponíveis?"
++  resposta: "Você escolhe a cor e o acabamento que quiser; verificamos a disponibilidade sob consulta no Instagram."
+diff --git a/_data/instagram_posts.yml b/_data/instagram_posts.yml
+index bb39cd7..f6f72fc 100644
+--- a/_data/instagram_posts.yml
++++ b/_data/instagram_posts.yml
+@@ -1,7 +1,10 @@
+ posts:
++  - id: "DaTX9SZAaBw"
++    type: "reel"
++    image: "/assets/img/gallery/DaTX9SZAaBw.jpg"
+   - id: "DaQczXlxNrS"
+     type: "reel"
+     image: "/assets/img/gallery/DaQczXlxNrS.jpg"
+   - id: "DaBTe7oRwGp"
+     type: "p"
+     image: "/assets/img/gallery/DaBTe7oRwGp.jpg"
+@@ -65,9 +68,6 @@ posts:
+   - id: "DXpWSRFEf0z"
+     type: "p"
+     image: "/assets/img/gallery/DXpWSRFEf0z.jpg"
+   - id: "DXxc9ZqkYHp"
+     type: "p"
+     image: "/assets/img/gallery/DXxc9ZqkYHp.jpg"
+-  - id: "DXw1AmtEdMp"
+-    type: "p"
+-    image: "/assets/img/gallery/DXw1AmtEdMp.jpg"
+diff --git a/_includes/depoimentos.html b/_includes/depoimentos.html
+new file mode 100644
+index 0000000..03662cd
+--- /dev/null
++++ b/_includes/depoimentos.html
+@@ -0,0 +1,8 @@
++<div class="depoimentos-grid reveal-stagger">
++  {%- for item in site.data.depoimentos -%}
++  <figure class="depoimento-card">
++    <blockquote>{{ item.texto }}</blockquote>
++    <figcaption>{{ item.nome }}</figcaption>
++  </figure>
++  {%- endfor -%}
++</div>
+diff --git a/_includes/faq.html b/_includes/faq.html
+new file mode 100644
+index 0000000..f2d305e
+--- /dev/null
++++ b/_includes/faq.html
+@@ -0,0 +1,13 @@
++<div class="faq-list reveal-stagger">
++  {%- for item in site.data.faq -%}
++  <details class="faq-item">
++    <summary>
++      <span>{{ item.pergunta }}</span>
++      <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
++        <path d="M6 9l6 6 6-6"/>
++      </svg>
++    </summary>
++    <div class="faq-answer">{{ item.resposta | markdownify }}</div>
++  </details>
++  {%- endfor -%}
++</div>
+diff --git a/_includes/footer-scripts.html b/_includes/footer-scripts.html
+index ff2522d..67898d4 100644
+--- a/_includes/footer-scripts.html
++++ b/_includes/footer-scripts.html
+@@ -56,13 +56,14 @@
+       currentIndex = (index + total) % total;
+       var trigger = triggers[currentIndex];
+ 
+       modalImage.src = trigger.dataset.galleryImage;
+       modalImage.alt = trigger.querySelector("img").alt;
+       modalLink.href = trigger.dataset.galleryUrl;
+-      modalTitle.textContent = "Publicação " + (currentIndex + 1) + " de " + total;
++      var caption = trigger.dataset.galleryCaption;
++      modalTitle.textContent = caption && caption.length ? caption : "Publicação " + (currentIndex + 1) + " de " + total;
+ 
+       var hideNav = total <= 1;
+       prevBtn.hidden = hideNav;
+       nextBtn.hidden = hideNav;
+     }
+ 
+@@ -176,12 +177,43 @@
+       rootMargin: "0px 0px -60px 0px"
+     });
+ 
+     targets.forEach(function (el) { observer.observe(el); });
+   })();
+ 
++  (function () {
++    var form = document.getElementById("price-calc");
++    if (!form) return;
++
++    var peso = document.getElementById("calc-peso");
++    var tempo = document.getElementById("calc-tempo");
++    var out = document.getElementById("calc-result");
++    var d = form.dataset;
++    var fmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
++
++    function calc() {
++      var g = parseFloat(String(peso.value).replace(",", "."));
++      var h = parseFloat(String(tempo.value).replace(",", "."));
++      if (!isFinite(g) || !isFinite(h) || g <= 0 || h <= 0) {
++        out.textContent = "Preencha os campos";
++        out.classList.remove("has-value");
++        return;
++      }
++      var filamento = (g / 1000) * parseFloat(d.filamentoKg);
++      var energia = (parseFloat(d.potenciaW) * h / 1000) * parseFloat(d.tarifaKwh);
++      var desgaste = parseFloat(d.desgaste);
++      var subtotal = filamento + energia + desgaste;
++      var total = subtotal * (1 + parseFloat(d.margemPct) / 100) + parseFloat(d.montagem);
++      out.textContent = fmt.format(total);
++      out.classList.add("has-value");
++    }
++
++    form.addEventListener("input", calc);
++    form.addEventListener("submit", function (e) { e.preventDefault(); calc(); });
++  })();
++
+   (function () {
+     var btn = document.querySelector(".theme-toggle");
+     if (!btn) return;
+ 
+     var themeMeta = document.querySelector('meta[name="theme-color"]');
+     var THEME_COLOR = { light: "#faf6f1", dark: "#070b12" };
+@@ -218,7 +250,54 @@
+         var stored = null;
+         try { stored = localStorage.getItem("theme"); } catch (err) {}
+         if (!stored) withTransition(function () { sync(event.matches ? "light" : "dark"); });
+       });
+     }
+   })();
++
++  (function () {
++    var triggers = document.querySelectorAll(".img-zoom");
++    if (!triggers.length) return;
++
++    var box = document.getElementById("img-lightbox");
++    if (!box) return;
++
++    var boxImg = document.getElementById("img-lightbox-img");
++    var lastTrigger = null;
++
++    function openBox(trigger) {
++      var img = trigger.querySelector("img");
++      if (!img) return;
++      boxImg.src = img.currentSrc || img.src;
++      boxImg.alt = img.alt;
++      lastTrigger = trigger;
++      box.hidden = false;
++      box.setAttribute("aria-hidden", "false");
++      document.body.classList.add("img-lightbox-open");
++      box.querySelector(".img-lightbox-close").focus();
++    }
++
++    function closeBox() {
++      box.hidden = true;
++      box.setAttribute("aria-hidden", "true");
++      document.body.classList.remove("img-lightbox-open");
++      boxImg.src = "";
++      if (lastTrigger) lastTrigger.focus();
++    }
++
++    triggers.forEach(function (trigger) {
++      trigger.addEventListener("click", function () { openBox(trigger); });
++    });
++
++    box.querySelectorAll("[data-lightbox-close]").forEach(function (el) {
++      el.addEventListener("click", closeBox);
++    });
++
++    box.addEventListener("click", function (event) {
++      if (event.target === box) closeBox();
++    });
++
++    document.addEventListener("keydown", function (event) {
++      if (!box.hidden && event.key === "Escape") closeBox();
++    });
++  })();
+ </script>
+diff --git a/_includes/head.html b/_includes/head.html
+index 6947a28..6b504f8 100644
+--- a/_includes/head.html
++++ b/_includes/head.html
+@@ -18,12 +18,13 @@
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=optional" rel="stylesheet">
+   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%y%m%d%H%M%S' }}">
+ 
+   {% seo %}
++  {% include structured-data.html %}
+ 
+   <meta property="og:image:width" content="1200">
+   <meta property="og:image:height" content="630">
+   <meta property="og:image:type" content="image/jpeg">
+   <meta name="twitter:card" content="summary_large_image">
+ 
+diff --git a/_includes/image-lightbox.html b/_includes/image-lightbox.html
+new file mode 100644
+index 0000000..4838320
+--- /dev/null
++++ b/_includes/image-lightbox.html
+@@ -0,0 +1,8 @@
++<div id="img-lightbox" class="img-lightbox" hidden aria-hidden="true">
++  <button type="button" class="img-lightbox-close" data-lightbox-close aria-label="Fechar">
++    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
++      <path d="M18 6L6 18M6 6l12 12"/>
++    </svg>
++  </button>
++  <img id="img-lightbox-img" class="img-lightbox-img" src="" alt="">
++</div>
+diff --git a/_includes/instagram-feed.html b/_includes/instagram-feed.html
+index 1f60010..12b2d9f 100644
+--- a/_includes/instagram-feed.html
++++ b/_includes/instagram-feed.html
+@@ -1,17 +1,17 @@
+ {% assign posts = site.data.instagram_posts.posts %}
+-{% assign max_posts = site.instagram.max_posts | default: 8 %}
++{% assign max_posts = site.instagram.max_posts | default: 24 %}
+ {% assign initial = site.gallery.initial | default: 12 %}
+ 
+ {% if posts.size > 0 %}
+ <div class="gallery-grid reveal-stagger">
+   {% for post in posts limit: max_posts %}
+     {% if forloop.index0 >= initial %}
+-      {% include instagram-post.html id=post.id type=post.type image=post.image hidden=true %}
++      {% include instagram-post.html id=post.id type=post.type image=post.image caption=post.caption hidden=true %}
+     {% else %}
+-      {% include instagram-post.html id=post.id type=post.type image=post.image %}
++      {% include instagram-post.html id=post.id type=post.type image=post.image caption=post.caption %}
+     {% endif %}
+   {% endfor %}
+ </div>
+ {% assign shown = posts.size %}
+ {% if shown > max_posts %}{% assign shown = max_posts %}{% endif %}
+ {% if shown > initial %}
+diff --git a/_includes/instagram-post.html b/_includes/instagram-post.html
+index e5811d4..bfe5e9e 100644
+--- a/_includes/instagram-post.html
++++ b/_includes/instagram-post.html
+@@ -3,18 +3,20 @@
+ <article class="gallery-item{% if include.hidden %} is-gallery-hidden{% endif %}"{% if include.hidden %} hidden{% endif %}>
+   <button
+     type="button"
+     class="gallery-trigger"
+     data-gallery-image="{{ include.image | relative_url }}"
+     data-gallery-url="{{ post_url }}"
++    data-gallery-caption="{{ include.caption }}"
+     aria-label="Ampliar publicação do Instagram"
+   >
++    {%- assign img_alt = include.caption | default: "Trabalho impresso em 3D por @" | append: site.instagram.username -%}
+     <img
+       class="gallery-image"
+       src="{{ include.image | relative_url }}"
+-      alt="Trabalho impresso em 3D por @{{ site.instagram.username }}"
++      alt="{{ img_alt }}"
+       loading="lazy"
+       decoding="async"
+     >
+     <span class="gallery-overlay" aria-hidden="true">
+       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+         <path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/>
+diff --git a/_includes/navbar.html b/_includes/navbar.html
+index 2ad4975..cf1592e 100644
+--- a/_includes/navbar.html
++++ b/_includes/navbar.html
+@@ -7,12 +7,13 @@
+     <button class="site-nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Abrir menu">
+       <span></span><span></span><span></span>
+     </button>
+     <ul class="site-nav-menu" id="site-nav-menu">
+       <li><a href="#como-funciona">Como funciona</a></li>
+       <li><a href="#galeria">Galeria</a></li>
++      <li><a href="#faq">Dúvidas</a></li>
+       <li><a href="#contato">Orçamento</a></li>
+       <li>
+         <button class="theme-toggle" type="button" aria-label="Alternar tema">
+           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+             <circle cx="12" cy="12" r="4"/>
+             <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+diff --git a/_includes/price-calculator.html b/_includes/price-calculator.html
+new file mode 100644
+index 0000000..b973236
+--- /dev/null
++++ b/_includes/price-calculator.html
+@@ -0,0 +1,44 @@
++<form id="price-calc" class="calc reveal"
++  data-filamento-kg="{{ site.calculadora.custo_filamento_kg }}"
++  data-potencia-w="{{ site.calculadora.potencia_w }}"
++  data-tarifa-kwh="{{ site.calculadora.tarifa_kwh }}"
++  data-desgaste="{{ site.calculadora.desgaste }}"
++  data-margem-pct="{{ site.calculadora.margem_pct }}"
++  data-montagem="{{ site.calculadora.montagem }}">
++  <div class="calc-fields">
++    <div class="calc-field">
++      <label for="calc-peso">Peso da peça (g)</label>
++      <input type="text" id="calc-peso" name="peso" inputmode="decimal" autocomplete="off" placeholder="ex: 50">
++    </div>
++    <div class="calc-field">
++      <label for="calc-tempo">Tempo de impressão (h)</label>
++      <input type="text" id="calc-tempo" name="tempo" inputmode="decimal" autocomplete="off" placeholder="ex: 4">
++    </div>
++  </div>
++  <div class="calc-result-box">
++    <span class="calc-result-label">Estimativa</span>
++    <output id="calc-result" class="calc-result" for="calc-peso calc-tempo" aria-live="polite">Preencha os campos</output>
++  </div>
++  <p class="calc-disclaimer">Valor apenas uma estimativa. O orçamento final é confirmado no <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">Instagram</a>, conforme o modelo escolhido.</p>
++  <details class="calc-help">
++    <summary>Onde encontrar o peso e o tempo no MakerWorld?</summary>
++    <ol class="calc-help-steps">
++      <li>
++        <p><strong>Tempo na lista:</strong> na página do modelo, role até <strong>Print Profile</strong> (à direita). Cada perfil mostra o tempo estimado ao lado do ícone de relógio (ex.: 2.7 h).</p>
++        <figure class="calc-help-figure">
++          <button type="button" class="img-zoom" aria-label="Ampliar imagem">
++            <img src="{{ '/assets/img/makerworld/passo-1-tempo-lista.png' | relative_url }}" alt="Lista de Print Profiles no MakerWorld com o tempo estimado destacado ao lado do ícone de relógio" loading="lazy" decoding="async">
++          </button>
++        </figure>
++      </li>
++      <li>
++        <p><strong>Peso e detalhes:</strong> passe o mouse sobre um perfil (sem clicar). Abre um painel com o tempo total (relógio) e o peso total do filamento (carretel, ex.: 19 g).</p>
++        <figure class="calc-help-figure">
++          <button type="button" class="img-zoom" aria-label="Ampliar imagem">
++            <img src="{{ '/assets/img/makerworld/passo-2-peso-tempo-detalhe.png' | relative_url }}" alt="Painel de detalhes de um Print Profile no MakerWorld mostrando o tempo total e o peso total do filamento" loading="lazy" decoding="async">
++          </button>
++        </figure>
++      </li>
++    </ol>
++  </details>
++</form>
+diff --git a/_includes/structured-data.html b/_includes/structured-data.html
+new file mode 100644
+index 0000000..0d466fe
+--- /dev/null
++++ b/_includes/structured-data.html
+@@ -0,0 +1,30 @@
++<script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "ProfessionalService",
++  "name": {{ site.title | jsonify }},
++  "description": {{ site.description | jsonify }},
++  "url": {{ site.url | jsonify }},
++  "image": {{ site.url | append: site.image | jsonify }},
++  "areaServed": { "@type": "Country", "name": "Brasil" },
++  "serviceType": "Impressão 3D sob encomenda",
++  "sameAs": [ {{ site.instagram.profile_url | jsonify }} ]
++}
++</script>
++{%- if site.data.faq and site.data.faq.size > 0 %}
++<script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "FAQPage",
++  "mainEntity": [
++    {%- for item in site.data.faq %}
++    {
++      "@type": "Question",
++      "name": {{ item.pergunta | jsonify }},
++      "acceptedAnswer": { "@type": "Answer", "text": {{ item.resposta | jsonify }} }
++    }{% unless forloop.last %},{% endunless %}
++    {%- endfor %}
++  ]
++}
++</script>
++{%- endif %}
+diff --git a/_includes/whatsapp-link.html b/_includes/whatsapp-link.html
+new file mode 100644
+index 0000000..924f54f
+--- /dev/null
++++ b/_includes/whatsapp-link.html
+@@ -0,0 +1,9 @@
++{%- assign wa_message = include.message | default: site.whatsapp.message -%}
++{%- assign wa_class = include.class | default: "btn btn-gradient" -%}
++{%- assign wa_label = include.label | default: "Pedir orçamento no WhatsApp" -%}
++<a class="{{ wa_class }}" href="https://wa.me/{{ site.whatsapp.number }}?text={{ wa_message | url_encode }}" target="_blank" rel="noopener noreferrer">
++  <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="18" height="18">
++    <path d="M17.5 14.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35zM12 2a10 10 0 00-8.6 15.05L2 22l5.05-1.32A10 10 0 1012 2z"/>
++  </svg>
++  <span>{{ wa_label }}</span>
++</a>
+diff --git a/_layouts/default.html b/_layouts/default.html
+index 3613dfe..8b4317f 100644
+--- a/_layouts/default.html
++++ b/_layouts/default.html
+@@ -2,10 +2,11 @@
+ <html lang="{{ site.lang | default: 'pt-BR' }}">
+ {% include head.html %}
+ <body>
+   {% include navbar.html %}
+   {{ content }}
+   {% include gallery-modal.html %}
++  {% include image-lightbox.html %}
+   {% include footer.html %}
+   {% include footer-scripts.html %}
+ </body>
+ </html>
+diff --git a/assets/css/style.scss b/assets/css/style.scss
+index 36d9b52..62b4301 100644
+--- a/assets/css/style.scss
++++ b/assets/css/style.scss
+@@ -1511,6 +1511,220 @@ body.gallery-modal-open {
+     animation-duration: 0.01ms !important;
+     animation-iteration-count: 1 !important;
+     transition-duration: 0.01ms !important;
+     scroll-behavior: auto !important;
+   }
+ }
++
++.section-calc { background: var(--section-tint); }
++
++.calc {
++  max-width: 640px;
++  margin: 0 auto;
++  padding: 2rem;
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: 20px;
++  box-shadow: 0 20px 40px -30px var(--shadow-soft);
++}
++.calc-fields {
++  display: grid;
++  grid-template-columns: 1fr 1fr;
++  gap: 1rem;
++}
++@media (max-width: 520px) {
++  .calc-fields { grid-template-columns: 1fr; }
++}
++.calc-field { display: flex; flex-direction: column; gap: 0.4rem; }
++.calc-field label { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
++.calc-field input {
++  padding: 0.7rem 0.9rem;
++  background: var(--surface-soft);
++  border: 1px solid var(--border-strong);
++  border-radius: 12px;
++  color: var(--text);
++  font: inherit;
++}
++.calc-field input:focus-visible {
++  outline: none;
++  border-color: var(--cyan);
++}
++.calc-result-box {
++  margin-top: 1.5rem;
++  padding: 1.25rem;
++  text-align: center;
++  background: var(--surface-soft);
++  border-radius: 14px;
++}
++.calc-result-label {
++  display: block;
++  font-size: 0.75rem;
++  text-transform: uppercase;
++  letter-spacing: 0.08em;
++  color: var(--muted);
++}
++.calc-result {
++  display: block;
++  margin-top: 0.25rem;
++  font-size: 1rem;
++  font-weight: 600;
++  color: var(--muted);
++}
++.calc-result.has-value {
++  font-size: 2rem;
++  font-weight: 800;
++  color: transparent;
++  background: var(--gradient);
++  -webkit-background-clip: text;
++  background-clip: text;
++  -webkit-text-fill-color: transparent;
++}
++.calc-help {
++  margin-top: 1rem;
++  padding-top: 1rem;
++  border-top: 1px solid var(--border);
++}
++.calc-help summary {
++  cursor: pointer;
++  color: var(--cyan);
++  font-size: 0.85rem;
++  font-weight: 600;
++}
++.calc-help-figure { margin: 0.75rem 0 0; }
++.calc-help-figure img {
++  width: 100%;
++  border-radius: 12px;
++  border: 1px solid var(--border);
++  display: block;
++}
++.calc-help-figure figcaption {
++  margin-top: 0.5rem;
++  font-size: 0.8rem;
++  color: var(--muted);
++}
++.calc-help-steps {
++  margin: 0.75rem 0 0;
++  padding-left: 1.15rem;
++  display: flex;
++  flex-direction: column;
++  gap: 1.1rem;
++}
++.calc-help-steps li { color: var(--muted); }
++.calc-help-steps p {
++  margin: 0 0 0.6rem;
++  font-size: 0.85rem;
++  line-height: 1.5;
++}
++.calc-help-steps strong { color: var(--text); }
++.calc-disclaimer {
++  margin: 1rem 0 1.25rem;
++  font-size: 0.8rem;
++  color: var(--muted-soft);
++  text-align: center;
++}
++
++.faq-list {
++  max-width: 720px;
++  margin: 0 auto;
++  display: flex;
++  flex-direction: column;
++  gap: 0.75rem;
++}
++.faq-item {
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: 14px;
++  overflow: hidden;
++}
++.faq-item summary {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 1rem;
++  padding: 1.1rem 1.3rem;
++  cursor: pointer;
++  font-weight: 600;
++  color: var(--text);
++  list-style: none;
++}
++.faq-item summary::-webkit-details-marker { display: none; }
++.faq-item summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
++.faq-chevron {
++  flex-shrink: 0;
++  width: 20px;
++  height: 20px;
++  color: var(--muted);
++  transition: transform 0.25s ease;
++}
++.faq-item[open] .faq-chevron { transform: rotate(180deg); }
++.faq-answer {
++  padding: 0 1.3rem 1.2rem;
++  color: var(--muted);
++  line-height: 1.6;
++}
++.faq-answer p { margin: 0; }
++
++.depoimentos-grid {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
++  gap: 1.25rem;
++}
++.depoimento-card {
++  margin: 0;
++  padding: 1.5rem;
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: 16px;
++}
++.depoimento-card blockquote {
++  margin: 0 0 1rem;
++  color: var(--text);
++  line-height: 1.6;
++}
++.depoimento-card blockquote::before { content: "\201C"; color: var(--cyan); font-weight: 800; }
++.depoimento-card figcaption { color: var(--muted); font-weight: 600; font-size: 0.9rem; }
++
++.img-zoom {
++  display: block;
++  width: 100%;
++  margin: 0;
++  padding: 0;
++  border: none;
++  background: none;
++  cursor: zoom-in;
++}
++.img-zoom img { display: block; }
++
++.img-lightbox {
++  position: fixed;
++  inset: 0;
++  z-index: 1000;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  padding: 1.5rem;
++  background: var(--modal-backdrop);
++}
++.img-lightbox[hidden] { display: none; }
++.img-lightbox-img {
++  max-width: 100%;
++  max-height: 90vh;
++  border-radius: 12px;
++  box-shadow: 0 24px 60px -20px var(--shadow-strong);
++}
++.img-lightbox-close {
++  position: absolute;
++  top: 1rem;
++  right: 1rem;
++  width: 44px;
++  height: 44px;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  border: none;
++  border-radius: 999px;
++  background: var(--surface-elev-strong);
++  color: var(--text);
++  cursor: pointer;
++}
++.img-lightbox-close svg { width: 22px; height: 22px; }
++body.img-lightbox-open { overflow: hidden; }
+diff --git a/index.html b/index.html
+index 028b12f..42fa9d7 100644
+--- a/index.html
++++ b/index.html
+@@ -103,20 +103,31 @@ title: "Wisky 3D Print"
+             <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+             <path d="M3.3 7.7L12 12.5l8.7-4.8M12 22V12.5"/>
+           </svg>
+         </div>
+         <div class="step-content">
+           <span class="step-label">Passo 04</span>
+-          <h3>Receba e imprima</h3>
++          <h3>Orçamento e impressão</h3>
+           <p>Retornamos com orçamento, prazo e entrega. Após sua aprovação, a peça vai para a impressora.</p>
+         </div>
+       </li>
+     </ol>
+   </div>
+ </section>
+ 
++<section id="estimativa" class="section section-calc">
++  <div class="container">
++    <header class="section-header section-header-center reveal">
++      <span class="section-tag">Estimativa</span>
++      <h2>Calcule o preço aproximado</h2>
++      <p>Informe o peso e o tempo de impressão do modelo para uma estimativa rápida. Você encontra esses dados na própria página do modelo no MakerWorld.</p>
++    </header>
++    {% include price-calculator.html %}
++  </div>
++</section>
++
+ <section id="galeria" class="section section-gallery">
+   <div class="container">
+     <header class="section-header section-header-center reveal">
+       <span class="section-tag">Portfólio</span>
+       <h2>Trabalhos recentes</h2>
+       <p>Peças e projetos publicados no nosso Instagram.</p>
+@@ -129,19 +140,42 @@ title: "Wisky 3D Print"
+         Ver todos em @{{ site.instagram.username }} →
+       </a>
+     </p>
+   </div>
+ </section>
+ 
++<section id="faq" class="section section-faq">
++  <div class="container">
++    <header class="section-header section-header-center reveal">
++      <span class="section-tag">Dúvidas</span>
++      <h2>Perguntas frequentes</h2>
++      <p>As respostas rápidas antes de você fazer seu pedido.</p>
++    </header>
++    {% include faq.html %}
++  </div>
++</section>
++
++{%- if site.data.depoimentos and site.data.depoimentos.size > 0 -%}
++<section id="depoimentos" class="section section-depoimentos">
++  <div class="container">
++    <header class="section-header section-header-center reveal">
++      <span class="section-tag">Depoimentos</span>
++      <h2>O que dizem os clientes</h2>
++    </header>
++    {% include depoimentos.html %}
++  </div>
++</section>
++{%- endif -%}
++
+ <section id="contato" class="section section-cta">
+   <div class="container">
+     <div class="cta-panel reveal">
+       <div class="cta-panel-glow" aria-hidden="true"></div>
+       <div class="cta-panel-content">
+         <span class="section-tag">Orçamento</span>
+-        <h2>Pronto para imprimir?</h2>
++        <h2>Pronto para tirar sua ideia do papel?</h2>
+         <p>Envie o link do modelo no Instagram e receba seu orçamento personalizado.</p>
+         <a class="btn btn-gradient btn-lg" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+           Chamar @{{ site.instagram.username }}
+         </a>
+       </div>
+       <div class="cta-panel-visual" aria-hidden="true">
+diff --git a/robots.txt b/robots.txt
+new file mode 100644
+index 0000000..abcfc5b
+--- /dev/null
++++ b/robots.txt
+@@ -0,0 +1,6 @@
++---
++---
++User-agent: *
++Allow: /
++
++Sitemap: {{ "/sitemap.xml" | absolute_url }}
+diff --git a/scripts/update-gallery.py b/scripts/update-gallery.py
+index 8a76a62..4c5799b 100644
+--- a/scripts/update-gallery.py
++++ b/scripts/update-gallery.py
+@@ -84,13 +84,15 @@ def collect_posts():
+         for item in items:
+             code = item.get("code")
+             image_url = _pick_image_url(item)
+             if not code or not image_url:
+                 continue
+             post_type = "reel" if item.get("product_type") == "clips" else "p"
+-            posts.append({"code": code, "type": post_type, "image_url": image_url})
++            caption_obj = item.get("caption") or {}
++            caption = (caption_obj.get("text") or "").replace("\n", " ").strip()
++            posts.append({"code": code, "type": post_type, "image_url": image_url, "caption": caption})
+ 
+         if not data.get("more_available") or not data.get("next_max_id"):
+             break
+         max_id = data["next_max_id"]
+ 
+     return posts[:MAX_POSTS]
+@@ -142,17 +144,24 @@ def main():
+             with open(image_path, "wb") as img_file:
+                 img_file.write(content)
+         except Exception as exc:
+             warnings.append(f"  {code}: falha no download ({exc})")
+             continue
+ 
++        alt = post.get("caption", "")
++        if len(alt) > 150:
++            alt = alt[:147].rstrip() + "..."
++        alt = alt.replace("\\", " ").replace('"', "'")
++
+         lines += [
+             f'  - id: "{code}"',
+             f'    type: "{post_type}"',
+             f'    image: "{web_path}"',
+         ]
++        if alt:
++            lines.append(f'    caption: "{alt}"')
+         image_paths.append(image_path)
+ 
+     with open(DATA_FILE, "w", encoding="utf-8") as data_file:
+         data_file.write("\n".join(lines) + "\n")
+ 
+     print(f"Atualizado: {len(image_paths)} posts em {GALLERY_DIR}")
