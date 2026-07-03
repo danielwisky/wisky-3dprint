@@ -180,6 +180,35 @@
   })();
 
   (function () {
+    var form = document.getElementById("price-calc");
+    if (!form) return;
+
+    var peso = document.getElementById("calc-peso");
+    var tempo = document.getElementById("calc-tempo");
+    var out = document.getElementById("calc-result");
+    var d = form.dataset;
+    var fmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
+    function calc() {
+      var g = parseFloat(peso.value);
+      var h = parseFloat(tempo.value);
+      if (!isFinite(g) || !isFinite(h) || g <= 0 || h <= 0) {
+        out.textContent = "—";
+        return;
+      }
+      var filamento = (g / 1000) * parseFloat(d.filamentoKg);
+      var energia = (parseFloat(d.potenciaW) * h / 1000) * parseFloat(d.tarifaKwh);
+      var desgaste = parseFloat(d.desgaste);
+      var subtotal = filamento + energia + desgaste;
+      var total = subtotal * (1 + parseFloat(d.margemPct) / 100) + parseFloat(d.montagem);
+      out.textContent = fmt.format(total);
+    }
+
+    form.addEventListener("input", calc);
+    form.addEventListener("submit", function (e) { e.preventDefault(); calc(); });
+  })();
+
+  (function () {
     var btn = document.querySelector(".theme-toggle");
     if (!btn) return;
 
