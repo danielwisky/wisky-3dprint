@@ -1,0 +1,7 @@
+# Preencha para exibir a seção de depoimentos no site.
+# A seção fica escondida enquanto esta lista estiver vazia.
+# Exemplo:
+# - nome: "Maria S."
+#   texto: "Peça impecável e entrega rápida. Recomendo!"
+# - nome: "João P."
+#   texto: "Atendimento ótimo pelo WhatsApp, ficou exatamente como eu queria."

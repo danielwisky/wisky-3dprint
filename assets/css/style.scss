@@ -296,7 +296,9 @@ code {
   }
 
   .nav-cta {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     padding: 0.5rem 0.85rem;
     margin-left: 0.5rem;
     color: var(--on-accent);
@@ -1514,3 +1516,134 @@ body.gallery-modal-open {
     scroll-behavior: auto !important;
   }
 }
+
+.section-calc { background: var(--section-tint); }
+
+.calc {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px -30px var(--shadow-soft);
+}
+.calc-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 520px) {
+  .calc-fields { grid-template-columns: 1fr; }
+}
+.calc-field { display: flex; flex-direction: column; gap: 0.4rem; }
+.calc-field label { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+.calc-field input {
+  padding: 0.7rem 0.9rem;
+  background: var(--surface-soft);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  color: var(--text);
+  font: inherit;
+}
+.calc-field input:focus-visible {
+  outline: none;
+  border-color: var(--cyan);
+}
+.calc-result-box {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  text-align: center;
+  background: var(--surface-soft);
+  border-radius: 14px;
+}
+.calc-result-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.calc-result {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.calc-result.has-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: transparent;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.calc-disclaimer {
+  margin: 1rem 0 1.25rem;
+  font-size: 0.8rem;
+  color: var(--muted-soft);
+  text-align: center;
+}
+
+.faq-list {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.3rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  list-style: none;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+.faq-chevron {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  transition: transform 0.25s ease;
+}
+.faq-item[open] .faq-chevron { transform: rotate(180deg); }
+.faq-answer {
+  padding: 0 1.3rem 1.2rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.faq-answer p { margin: 0; }
+
+.depoimentos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+.depoimento-card {
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.depoimento-card blockquote {
+  margin: 0 0 1rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+.depoimento-card blockquote::before { content: "\201C"; color: var(--cyan); font-weight: 800; }
+.depoimento-card figcaption { color: var(--muted); font-weight: 600; font-size: 0.9rem; }

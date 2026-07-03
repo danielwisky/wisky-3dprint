@@ -10,6 +10,10 @@ instagram:
   profile_url: "https://www.instagram.com/wisky.3dprint"
   max_posts: 24
 
+whatsapp:
+  number: "5511986349616"
+  message: "Olá! Vim pelo site da Wisky 3D Print. Quero um orçamento, segue o link do modelo no MakerWorld: "
+
 gallery:
   initial: 12   # quantos posts aparecem antes de clicar em "Carregar mais"
   batch: 12     # quantos posts cada clique revela
@@ -26,6 +30,14 @@ kramdown:
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
+
+calculadora:
+  custo_filamento_kg: 129
+  potencia_w: 80
+  tarifa_kwh: 0.80
+  desgaste: 2.00
+  margem_pct: 100
+  montagem: 20
 
 exclude:
   - Gemfile

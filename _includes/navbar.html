@@ -10,6 +10,7 @@
     <ul class="site-nav-menu" id="site-nav-menu">
       <li><a href="#como-funciona">Como funciona</a></li>
       <li><a href="#galeria">Galeria</a></li>
+      <li><a href="#faq">Dúvidas</a></li>
       <li><a href="#contato">Orçamento</a></li>
       <li>
         <button class="theme-toggle" type="button" aria-label="Alternar tema">
@@ -23,9 +24,7 @@
         </button>
       </li>
       <li>
-        <a class="nav-cta" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
-          @{{ site.instagram.username }}
-        </a>
+        {% include whatsapp-link.html class="nav-cta" label="WhatsApp" %}
       </li>
     </ul>
   </div>

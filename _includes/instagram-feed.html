@@ -1,14 +1,14 @@
 {% assign posts = site.data.instagram_posts.posts %}
-{% assign max_posts = site.instagram.max_posts | default: 8 %}
+{% assign max_posts = site.instagram.max_posts | default: 24 %}
 {% assign initial = site.gallery.initial | default: 12 %}
 
 {% if posts.size > 0 %}
 <div class="gallery-grid reveal-stagger">
   {% for post in posts limit: max_posts %}
     {% if forloop.index0 >= initial %}
-      {% include instagram-post.html id=post.id type=post.type image=post.image hidden=true %}
+      {% include instagram-post.html id=post.id type=post.type image=post.image caption=post.caption hidden=true %}
     {% else %}
-      {% include instagram-post.html id=post.id type=post.type image=post.image %}
+      {% include instagram-post.html id=post.id type=post.type image=post.image caption=post.caption %}
     {% endif %}
   {% endfor %}
 </div>

@@ -1,0 +1,23 @@
+<form id="price-calc" class="calc reveal"
+  data-filamento-kg="{{ site.calculadora.custo_filamento_kg }}"
+  data-potencia-w="{{ site.calculadora.potencia_w }}"
+  data-tarifa-kwh="{{ site.calculadora.tarifa_kwh }}"
+  data-desgaste="{{ site.calculadora.desgaste }}"
+  data-margem-pct="{{ site.calculadora.margem_pct }}"
+  data-montagem="{{ site.calculadora.montagem }}">
+  <div class="calc-fields">
+    <div class="calc-field">
+      <label for="calc-peso">Peso da peça (g)</label>
+      <input type="text" id="calc-peso" name="peso" inputmode="decimal" autocomplete="off" placeholder="ex: 50">
+    </div>
+    <div class="calc-field">
+      <label for="calc-tempo">Tempo de impressão (h)</label>
+      <input type="text" id="calc-tempo" name="tempo" inputmode="decimal" autocomplete="off" placeholder="ex: 4">
+    </div>
+  </div>
+  <div class="calc-result-box">
+    <span class="calc-result-label">Estimativa</span>
+    <output id="calc-result" class="calc-result" for="calc-peso calc-tempo" aria-live="polite">Preencha os campos</output>
+  </div>
+  <p class="calc-disclaimer">Valor apenas uma estimativa. O orçamento final é confirmado no <a href="https://wa.me/{{ site.whatsapp.number }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>, conforme o modelo escolhido.</p>
+</form>

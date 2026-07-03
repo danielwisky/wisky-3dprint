@@ -1,4 +1,7 @@
 posts:
+  - id: "DaTX9SZAaBw"
+    type: "reel"
+    image: "/assets/img/gallery/DaTX9SZAaBw.jpg"
   - id: "DaQczXlxNrS"
     type: "reel"
     image: "/assets/img/gallery/DaQczXlxNrS.jpg"
@@ -68,6 +71,3 @@ posts:
   - id: "DXxc9ZqkYHp"
     type: "p"
     image: "/assets/img/gallery/DXxc9ZqkYHp.jpg"
-  - id: "DXw1AmtEdMp"
-    type: "p"
-    image: "/assets/img/gallery/DXw1AmtEdMp.jpg"

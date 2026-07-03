@@ -20,14 +20,12 @@ title: "Wisky 3D Print"
     </h1>
     <p class="hero-lead">
       Encontrou algo no MakerWorld? Imprimimos com qualidade, acabamento cuidadoso
-      e combinamos a entrega pelo Instagram.
+      e combinamos tudo pelo WhatsApp.
     </p>
     <div class="hero-actions">
-      <a class="btn btn-gradient" href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">
+      {% include whatsapp-link.html class="btn btn-gradient" label="Pedir orçamento no WhatsApp" %}
+      <a class="btn btn-ghost" href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">
         Explorar MakerWorld
-      </a>
-      <a class="btn btn-ghost" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
-        Pedir orçamento
       </a>
     </div>
     <dl class="hero-stats">
@@ -42,8 +40,8 @@ title: "Wisky 3D Print"
       <div>
         <dt>Contato</dt>
         <dd>
-          <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
-            @{{ site.instagram.username }}
+          <a href="https://wa.me/{{ site.whatsapp.number }}" target="_blank" rel="noopener noreferrer">
+            WhatsApp
           </a>
         </dd>
       </div>
@@ -93,8 +91,8 @@ title: "Wisky 3D Print"
         </div>
         <div class="step-content">
           <span class="step-label">Passo 03</span>
-          <h3>Envie no Instagram</h3>
-          <p>Envie o link para <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer"><strong>@{{ site.instagram.username }}</strong></a> informando cor, tamanho e quantidade.</p>
+          <h3>Envie no WhatsApp</h3>
+          <p>Mande o link para o nosso <a href="https://wa.me/{{ site.whatsapp.number }}" target="_blank" rel="noopener noreferrer"><strong>WhatsApp</strong></a> informando cor, tamanho e quantidade.</p>
         </div>
       </li>
       <li class="step-pipeline-item">
@@ -111,6 +109,17 @@ title: "Wisky 3D Print"
         </div>
       </li>
     </ol>
+  </div>
+</section>
+
+<section id="estimativa" class="section section-calc">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Estimativa</span>
+      <h2>Calcule o preço aproximado</h2>
+      <p>Informe o peso e o tempo de impressão do modelo para uma estimativa rápida.</p>
+    </header>
+    {% include price-calculator.html %}
   </div>
 </section>
 
@@ -132,6 +141,29 @@ title: "Wisky 3D Print"
   </div>
 </section>
 
+<section id="faq" class="section section-faq">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Dúvidas</span>
+      <h2>Perguntas frequentes</h2>
+      <p>As respostas rápidas antes de você chamar no WhatsApp.</p>
+    </header>
+    {% include faq.html %}
+  </div>
+</section>
+
+{%- if site.data.depoimentos and site.data.depoimentos.size > 0 -%}
+<section id="depoimentos" class="section section-depoimentos">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Depoimentos</span>
+      <h2>O que dizem os clientes</h2>
+    </header>
+    {% include depoimentos.html %}
+  </div>
+</section>
+{%- endif -%}
+
 <section id="contato" class="section section-cta">
   <div class="container">
     <div class="cta-panel reveal">
@@ -139,10 +171,8 @@ title: "Wisky 3D Print"
       <div class="cta-panel-content">
         <span class="section-tag">Orçamento</span>
         <h2>Pronto para imprimir?</h2>
-        <p>Envie o link do modelo no Instagram e receba seu orçamento personalizado.</p>
-        <a class="btn btn-gradient btn-lg" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
-          Chamar @{{ site.instagram.username }}
-        </a>
+        <p>Envie o link do modelo no WhatsApp e receba seu orçamento personalizado.</p>
+        {% include whatsapp-link.html class="btn btn-gradient btn-lg" label="Chamar no WhatsApp" %}
       </div>
       <div class="cta-panel-visual" aria-hidden="true">
         <div class="filament-ring"></div>
