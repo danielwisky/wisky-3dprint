@@ -1620,3 +1620,23 @@ body.gallery-modal-open {
   line-height: 1.6;
 }
 .faq-answer p { margin: 0; }
+
+.depoimentos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+.depoimento-card {
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.depoimento-card blockquote {
+  margin: 0 0 1rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+.depoimento-card blockquote::before { content: "\201C"; color: var(--cyan); font-weight: 800; }
+.depoimento-card figcaption { color: var(--muted); font-weight: 600; font-size: 0.9rem; }

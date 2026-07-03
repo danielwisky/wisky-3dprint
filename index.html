@@ -152,6 +152,18 @@ title: "Wisky 3D Print"
   </div>
 </section>
 
+{%- if site.data.depoimentos and site.data.depoimentos.size > 0 -%}
+<section id="depoimentos" class="section section-depoimentos">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Depoimentos</span>
+      <h2>O que dizem os clientes</h2>
+    </header>
+    {% include depoimentos.html %}
+  </div>
+</section>
+{%- endif -%}
+
 <section id="contato" class="section section-cta">
   <div class="container">
     <div class="cta-panel reveal">
