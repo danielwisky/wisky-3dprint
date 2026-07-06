@@ -104,6 +104,8 @@ $nav-h: 72px;
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  // Desloca o alvo das âncoras pra baixo da navbar fixa (senão o título fica oculto).
+  scroll-padding-top: calc(#{$nav-h} + 1.5rem);
 }
 
 body {
@@ -1472,6 +1474,12 @@ body.gallery-modal-open {
     padding: 4rem 0;
   }
 
+  // Reserva o espaço da navbar fixa: o override de .section acima
+  // zera o padding-top que a .section-estoque define no desktop.
+  .section-estoque {
+    padding-top: calc(#{$nav-h} + env(safe-area-inset-top, 0px) + 3rem);
+  }
+
   .section-header {
     margin-bottom: 2.25rem;
   }
@@ -1568,6 +1576,10 @@ body.gallery-modal-open {
 // Mobile
 @media (max-width: 768px) {
   $nav-h-mobile: 64px;
+
+  html {
+    scroll-padding-top: calc(#{$nav-h-mobile} + env(safe-area-inset-top, 0px) + 1.5rem);
+  }
 
   .site-nav {
     height: $nav-h-mobile;
@@ -1674,6 +1686,11 @@ body.gallery-modal-open {
 
   .section {
     padding: 3.25rem 0;
+  }
+
+  // Navbar mobile = $nav-h-mobile + safe-area; mantém o título abaixo do menu fixo.
+  .section-estoque {
+    padding-top: calc(#{$nav-h-mobile} + env(safe-area-inset-top, 0px) + 3rem);
   }
 
   .section-cta {
