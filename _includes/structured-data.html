@@ -28,3 +28,40 @@
 }
 </script>
 {%- endif %}
+{%- if page.url == "/pronta-entrega/" and site.data.estoque.pecas and site.data.estoque.pecas.size > 0 %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Pronta Entrega — {{ site.title }}",
+  "itemListElement": [
+    {%- for peca in site.data.estoque.pecas %}
+    {%- assign fotos = peca.imagens -%}
+    {%- if fotos == nil and peca.imagem and peca.imagem != "" -%}{%- assign fotos = peca.imagem | split: "§" -%}{%- endif -%}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "item": {
+        "@type": "Product",
+        "name": {{ peca.nome | jsonify }},
+        {%- if peca.descricao and peca.descricao != "" %}
+        "description": {{ peca.descricao | jsonify }},
+        {%- endif %}
+        {%- if fotos and fotos.size > 0 %}
+        "image": [{% for foto in fotos %}{{ foto | absolute_url | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}],
+        {%- endif %}
+        "offers": {
+          "@type": "Offer",
+          "price": {{ peca.preco | remove: "R$" | remove: "." | strip | jsonify }},
+          "priceCurrency": "BRL",
+          "availability": "https://schema.org/InStock",
+          "url": {{ "/pronta-entrega/" | absolute_url | jsonify }},
+          "seller": { "@type": "Organization", "name": {{ site.title | jsonify }} }
+        }
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ]
+}
+</script>
+{%- endif %}
