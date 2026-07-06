@@ -179,7 +179,10 @@
         }
       });
     }, {
-      threshold: 0.15,
+      // threshold 0: revela assim que qualquer parte entra na tela. Um valor
+      // fracionário (ex.: 0.15) nunca dispara em elementos mais altos que a tela
+      // (ex.: o grid do estoque em 1 coluna no celular), deixando o conteúdo preso invisível.
+      threshold: 0,
       rootMargin: "0px 0px -60px 0px"
     });
 
