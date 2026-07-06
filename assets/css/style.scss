@@ -923,7 +923,10 @@ code {
 
 .estoque-card-media {
   position: relative;
-  aspect-ratio: 3 / 4;
+  width: 100%;
+  // Proporção 3:4 via padding (robusto em todo navegador, inclusive Safari iOS,
+  // que tem bugs com aspect-ratio em itens de flex/grid).
+  padding-bottom: 133.333%;
   overflow: hidden;
   background: var(--bg-soft);
   isolation: isolate;
@@ -944,19 +947,6 @@ code {
   &.is-active {
     opacity: 1;
     visibility: visible;
-  }
-
-  // Preenche as sobras com a própria foto desfocada, sem cortar a foto principal.
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: var(--photo);
-    background-size: cover;
-    background-position: center;
-    filter: blur(22px) brightness(0.75) saturate(1.1);
-    transform: scale(1.25);
-    z-index: 0;
   }
 }
 
@@ -988,8 +978,7 @@ code {
   border: none;
   border-radius: 999px;
   color: var(--text);
-  background: color-mix(in srgb, var(--bg) 55%, transparent);
-  backdrop-filter: blur(6px);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s ease, background 0.2s ease;
@@ -1052,14 +1041,15 @@ code {
   }
 }
 
-.estoque-card-media-empty {
+.estoque-empty-inner {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   color: var(--muted-soft);
-  border-bottom: 1px solid var(--border);
 
   svg {
     width: 2.5rem;
