@@ -44,6 +44,8 @@
       "item": {
         "@type": "Product",
         "name": {{ peca.nome | jsonify }},
+        "sku": {{ peca.nome | slugify | prepend: "w3d-" | jsonify }},
+        "brand": { "@type": "Brand", "name": "Wisky 3D" },
         {%- if peca.descricao and peca.descricao != "" %}
         "description": {{ peca.descricao | jsonify }},
         {%- endif %}
