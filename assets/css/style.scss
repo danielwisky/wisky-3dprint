@@ -940,6 +940,7 @@ code {
   border: 0;
   background: none;
   cursor: zoom-in;
+  touch-action: manipulation;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.4s ease;
@@ -980,6 +981,7 @@ code {
   color: var(--text);
   background: color-mix(in srgb, var(--bg) 82%, transparent);
   cursor: pointer;
+  touch-action: manipulation;
   opacity: 0;
   transition: opacity 0.2s ease, background 0.2s ease;
 
@@ -1031,6 +1033,7 @@ code {
   border: none;
   border-radius: 999px;
   cursor: pointer;
+  touch-action: manipulation;
   background: color-mix(in srgb, var(--text) 35%, transparent);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
   transition: background 0.2s ease, transform 0.2s ease;
