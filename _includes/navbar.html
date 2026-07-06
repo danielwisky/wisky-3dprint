@@ -1,3 +1,7 @@
+{%- comment -%}
+  Âncoras fluidas na home (#secao → scroll suave); absolutas (/#secao) em outras páginas.
+{%- endcomment -%}
+{%- if page.url == "/" -%}{%- assign anchor_base = "" -%}{%- else -%}{%- assign anchor_base = "/" | relative_url -%}{%- endif -%}
 <nav class="site-nav" id="site-nav" aria-label="Principal">
   <div class="site-nav-inner">
     <a class="site-logo" href="{{ '/' | relative_url }}">
@@ -8,10 +12,11 @@
       <span></span><span></span><span></span>
     </button>
     <ul class="site-nav-menu" id="site-nav-menu">
-      <li><a href="#como-funciona">Como funciona</a></li>
-      <li><a href="#galeria">Galeria</a></li>
-      <li><a href="#faq">Dúvidas</a></li>
-      <li><a href="#contato">Orçamento</a></li>
+      <li><a href="{{ anchor_base }}#como-funciona">Como funciona</a></li>
+      <li><a href="{{ anchor_base }}#galeria">Galeria</a></li>
+      <li><a href="{{ anchor_base }}#faq">Dúvidas</a></li>
+      <li><a href="{{ anchor_base }}#contato">Orçamento</a></li>
+      <li class="site-nav-sep"><a class="nav-link-page" href="{{ '/pronta-entrega/' | relative_url }}">Pronta entrega</a></li>
       <li>
         <button class="theme-toggle" type="button" aria-label="Alternar tema">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

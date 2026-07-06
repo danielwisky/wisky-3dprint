@@ -12,7 +12,7 @@ instagram:
 
 gallery:
   initial: 12   # quantos posts aparecem antes de clicar em "Carregar mais"
-  batch: 12     # quantos posts cada clique revela
+  batch: 8      # quantos posts cada clique revela
 
 makerworld_url: "https://makerworld.com/en"
 

@@ -88,7 +88,8 @@ def collect_posts():
                 continue
             post_type = "reel" if item.get("product_type") == "clips" else "p"
             caption_obj = item.get("caption") or {}
-            caption = (caption_obj.get("text") or "").replace("\n", " ").strip()
+            # Só o título: primeira linha da legenda (o restante é a descrição do post).
+            caption = (caption_obj.get("text") or "").split("\n")[0].strip()
             posts.append({"code": code, "type": post_type, "image_url": image_url, "caption": caption})
 
         if not data.get("more_available") or not data.get("next_max_id"):

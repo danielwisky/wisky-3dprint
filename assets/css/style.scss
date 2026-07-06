@@ -316,6 +316,24 @@ code {
   }
 }
 
+// Separa os links âncora (one-page) do link de página "Pronta entrega"
+.site-nav-menu .site-nav-sep {
+  margin-left: 0.4rem;
+  padding-left: 0.55rem;
+  border-left: 1px solid var(--border);
+}
+
+.site-nav-menu .nav-link-page {
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+
+  &:hover {
+    color: var(--cyan);
+    border-color: color-mix(in srgb, var(--cyan) 45%, transparent);
+    background: var(--surface);
+  }
+}
+
 .site-nav-toggle {
   display: none;
   flex-direction: column;
@@ -876,6 +894,279 @@ code {
   }
 }
 
+// Pronta entrega (estoque)
+.section-estoque {
+  padding-top: calc(#{$nav-h} + 4rem);
+}
+
+.estoque-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.estoque-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: $radius-md;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--cyan) 35%, transparent);
+    box-shadow: 0 16px 40px var(--shadow-strong);
+  }
+}
+
+.estoque-card-media {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--bg-soft);
+  isolation: isolate;
+}
+
+// Cada foto do carrossel (também é o gatilho de zoom).
+.estoque-slide {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease;
+
+  &.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  // Preenche as sobras com a própria foto desfocada, sem cortar a foto principal.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--photo);
+    background-size: cover;
+    background-position: center;
+    filter: blur(22px) brightness(0.75) saturate(1.1);
+    transform: scale(1.25);
+    z-index: 0;
+  }
+}
+
+.estoque-card-image {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transition: transform 0.4s ease;
+}
+
+.estoque-card:hover .estoque-slide.is-active .estoque-card-image {
+  transform: scale(1.03);
+}
+
+// Setas do carrossel
+.estoque-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease;
+
+  svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  &:hover {
+    background: var(--bg);
+  }
+}
+
+.estoque-nav-prev {
+  left: 0.5rem;
+}
+
+.estoque-nav-next {
+  right: 0.5rem;
+}
+
+.estoque-card-media:hover .estoque-nav {
+  opacity: 1;
+}
+
+// Em telas de toque (sem hover), as setas ficam sempre visíveis.
+@media (hover: none) {
+  .estoque-nav {
+    opacity: 0.9;
+  }
+}
+
+// Bolinhas indicadoras
+.estoque-dots {
+  position: absolute;
+  bottom: 0.6rem;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.estoque-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--text) 35%, transparent);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  transition: background 0.2s ease, transform 0.2s ease;
+
+  &.is-active {
+    background: var(--text);
+    transform: scale(1.15);
+  }
+}
+
+.estoque-card-media-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--muted-soft);
+  border-bottom: 1px solid var(--border);
+
+  svg {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+}
+
+.estoque-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.25rem;
+  flex: 1;
+}
+
+.estoque-card-title {
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.estoque-card-desc {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.estoque-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.estoque-card-price {
+  font-family: $font-display;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--text);
+}
+
+.estoque-card-btn {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.estoque-empty {
+  text-align: center;
+  padding: 3.5rem 1.5rem;
+  border-radius: $radius-lg;
+  border: 1px dashed var(--border-strong);
+  background: var(--surface);
+}
+
+.estoque-empty-icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+  color: var(--violet);
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.estoque-empty p {
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+}
+
+// Teaser da home
+.estoque-teaser {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 2rem 2.25rem;
+  border-radius: $radius-lg;
+  border: 1px solid var(--border);
+  background: var(--surface);
+
+  h2 {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    margin: 0.35rem 0 0.5rem;
+  }
+
+  p {
+    color: var(--muted);
+    margin: 0;
+    max-width: 46ch;
+  }
+
+  .btn {
+    white-space: nowrap;
+  }
+}
+
 // Gallery modal
 body.gallery-modal-open {
   overflow: hidden;
@@ -1022,10 +1313,9 @@ body.gallery-modal-open {
 
 .gallery-modal-actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
   padding: 1.25rem 1.5rem;
   border-top: 1px solid var(--border);
 }
@@ -1034,6 +1324,10 @@ body.gallery-modal-open {
   margin: 0;
   font-size: 0.95rem;
   color: var(--muted);
+
+  &[hidden] {
+    display: none;
+  }
 }
 
 // CTA panel
@@ -1247,6 +1541,22 @@ body.gallery-modal-open {
     gap: 0.75rem;
   }
 
+  .estoque-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .estoque-teaser {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+
+    .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
   .cta-panel {
     grid-template-columns: 1fr;
   }
@@ -1315,6 +1625,17 @@ body.gallery-modal-open {
     .nav-cta {
       margin: 0.5rem 0 0;
       padding: 0.85rem 1rem;
+      text-align: center;
+    }
+
+    .site-nav-sep {
+      margin: 0.4rem 0 0;
+      padding: 0.6rem 0 0;
+      border-left: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-link-page {
       text-align: center;
     }
   }
@@ -1438,6 +1759,11 @@ body.gallery-modal-open {
 
   .gallery-item {
     border-radius: 10px;
+  }
+
+  .estoque-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .step-pipeline-item {

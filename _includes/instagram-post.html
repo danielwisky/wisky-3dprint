@@ -1,15 +1,17 @@
 {% assign post_type = include.type | default: "p" %}
 {% assign post_url = "https://www.instagram.com/" | append: post_type | append: "/" | append: include.id | append: "/" %}
+{%- comment -%} Só o título (primeira linha da legenda). Título e corpo vêm separados por espaço duplo. {%- endcomment -%}
+{% assign caption_title = include.caption | split: "  " | first | strip %}
 <article class="gallery-item{% if include.hidden %} is-gallery-hidden{% endif %}"{% if include.hidden %} hidden{% endif %}>
   <button
     type="button"
     class="gallery-trigger"
     data-gallery-image="{{ include.image | relative_url }}"
     data-gallery-url="{{ post_url }}"
-    data-gallery-caption="{{ include.caption }}"
+    data-gallery-caption="{{ caption_title }}"
     aria-label="Ampliar publicação do Instagram"
   >
-    {%- assign img_alt = include.caption | default: "Trabalho impresso em 3D por @" | append: site.instagram.username -%}
+    {%- assign img_alt = caption_title | default: "Trabalho impresso em 3D por @" | append: site.instagram.username -%}
     <img
       class="gallery-image"
       src="{{ include.image | relative_url }}"
