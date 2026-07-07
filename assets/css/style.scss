@@ -908,7 +908,14 @@ code {
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+}
+
+// Contagem de resultados (também é a região aria-live para leitores de tela).
+.estoque-count {
+  margin: 0 0 1.75rem;
+  font-size: 0.9rem;
+  color: var(--muted);
 }
 
 .estoque-filters {
@@ -977,10 +984,17 @@ code {
   display: none;
 }
 
-.estoque-none {
-  margin-top: 1.5rem;
-  text-align: center;
-  color: var(--muted);
+// Fade-in suave dos cards ao trocar de filtro (só opacidade, para não brigar
+// com o transform do hover). Aplicado via JS apenas em interações do usuário.
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes estoqueFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .estoque-card--in {
+    animation: estoqueFadeIn 0.3s ease;
+  }
 }
 
 .estoque-card {
@@ -1150,6 +1164,18 @@ code {
   gap: 0.6rem;
   padding: 1.25rem;
   flex: 1;
+}
+
+// Selo discreto de categoria acima do título.
+.estoque-card-cat {
+  align-self: flex-start;
+  margin-bottom: -0.3rem;
+  font-family: $font-body;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cyan) 70%, var(--muted));
 }
 
 .estoque-card-title {

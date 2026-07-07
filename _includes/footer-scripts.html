@@ -367,7 +367,7 @@
     });
   })();
 
-  // Filtro (chips de categoria) + ordenação da vitrine de pronta entrega.
+  // Filtro (chips) + ordenação + estado na URL da vitrine de pronta entrega.
   (function () {
     var controls = document.querySelector("[data-estoque-controls]");
     var grid = document.querySelector(".estoque-grid");
@@ -378,18 +378,41 @@
 
     var chips = Array.prototype.slice.call(controls.querySelectorAll(".estoque-chip"));
     var sortSelect = controls.querySelector("[data-estoque-sort]");
-    var noneMsg = document.querySelector("[data-estoque-none]");
+    var countMsg = document.querySelector("[data-estoque-count]");
 
     var filtroAtual = "todos";
 
-    function aplicarFiltro() {
+    function plural(n) {
+      return n + (n === 1 ? " peça" : " peças");
+    }
+
+    function atualizarContagem(visiveis) {
+      if (!countMsg) return;
+      countMsg.textContent = visiveis > 0
+        ? "Mostrando " + plural(visiveis)
+        : "Nenhuma peça nessa categoria por enquanto.";
+    }
+
+    // Re-dispara um fade-in suave nos cards visíveis (um reflow só).
+    function reproduzirFade() {
+      cards.forEach(function (card) { card.classList.remove("estoque-card--in"); });
+      void grid.offsetWidth;
+      cards.forEach(function (card) {
+        if (!card.classList.contains("estoque-card--hidden")) {
+          card.classList.add("estoque-card--in");
+        }
+      });
+    }
+
+    function aplicarFiltro(comFade) {
       var visiveis = 0;
       cards.forEach(function (card) {
         var mostra = filtroAtual === "todos" || card.getAttribute("data-categoria") === filtroAtual;
         card.classList.toggle("estoque-card--hidden", !mostra);
         if (mostra) visiveis++;
       });
-      if (noneMsg) noneMsg.hidden = visiveis > 0;
+      atualizarContagem(visiveis);
+      if (comFade) reproduzirFade();
     }
 
     function ordenar(modo) {
@@ -416,20 +439,63 @@
       });
     }
 
+    function ativarChip(chip) {
+      chips.forEach(function (c) {
+        var ativo = c === chip;
+        c.classList.toggle("is-active", ativo);
+        c.setAttribute("aria-pressed", ativo ? "true" : "false");
+      });
+    }
+
+    // Reflete filtro + ordenação na URL (?categoria=&ordem=), sem poluir o histórico.
+    function atualizarURL() {
+      if (!window.history || !window.history.replaceState) return;
+      var params = new URLSearchParams(window.location.search);
+      if (filtroAtual && filtroAtual !== "todos") params.set("categoria", filtroAtual);
+      else params.delete("categoria");
+      var ordem = sortSelect ? sortSelect.value : "padrao";
+      if (ordem && ordem !== "padrao") params.set("ordem", ordem);
+      else params.delete("ordem");
+      var qs = params.toString();
+      window.history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : ""));
+    }
+
     chips.forEach(function (chip) {
       chip.addEventListener("click", function () {
         filtroAtual = chip.getAttribute("data-filtro") || "todos";
-        chips.forEach(function (c) {
-          c.classList.toggle("is-active", c === chip);
-        });
-        aplicarFiltro();
+        ativarChip(chip);
+        aplicarFiltro(true);
+        atualizarURL();
       });
     });
 
     if (sortSelect) {
       sortSelect.addEventListener("change", function () {
         ordenar(sortSelect.value);
+        atualizarURL();
       });
     }
+
+    // Estado inicial a partir da URL (link compartilhável / sobrevive ao refresh).
+    (function initFromURL() {
+      var params = new URLSearchParams(window.location.search);
+      var cat = params.get("categoria");
+      var ordem = params.get("ordem");
+
+      if (cat) {
+        var alvo = chips.filter(function (c) {
+          return c.getAttribute("data-filtro") === cat;
+        })[0];
+        if (alvo) { filtroAtual = cat; ativarChip(alvo); }
+      }
+      if (ordem && sortSelect) {
+        var existe = Array.prototype.some.call(sortSelect.options, function (o) {
+          return o.value === ordem;
+        });
+        if (existe) sortSelect.value = ordem;
+      }
+      if (sortSelect && sortSelect.value !== "padrao") ordenar(sortSelect.value);
+      aplicarFiltro(false); // sem fade no load (evita conflito com o reveal-stagger)
+    })();
   })();
 </script>
