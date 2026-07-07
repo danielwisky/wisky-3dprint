@@ -6,6 +6,9 @@
 #     Use um rótulo curto e reaproveite os existentes (ex: "Personagens",
 #     "Star Wars", "Acessórios"). Criar uma categoria nova = digitar um nome
 #     novo; o chip aparece sozinho. Sem categoria, a peça vira "Outros".
+#   - preco:          apenas o número, em reais cheios (ex: preco: 265).
+#     Não escreva "R$" nem centavos — o site formata o "R$" sozinho.
+#     (Precisou de centavos/milhar? Me chame que ajusto a formatação.)
 #   - Uma foto só:   use o campo  imagem: "/assets/img/estoque/arquivo.webp"
 #   - Várias fotos:  use o campo  imagens:  (lista) — vira um carrossel no card.
 #     A primeira da lista é a capa. Coloque os arquivos em /assets/img/estoque/.
@@ -20,7 +23,7 @@ pecas:
       - "/assets/img/estoque/taz-3.webp"
       - "/assets/img/estoque/taz-2.webp"
       - "/assets/img/estoque/taz-1.webp"
-    preco: "R$ 265"
+    preco: 265
     descricao: "O redemoinho mais selvagem do Looney Tunes na pele dos Peaky Blinders. Cerca de 33 cm, com acabamento caprichado."
 
   - nome: "Yosemite Sam Peaky Blinders"
@@ -29,7 +32,7 @@ pecas:
       - "/assets/img/estoque/sam-3.webp"
       - "/assets/img/estoque/sam-2.webp"
       - "/assets/img/estoque/sam-1.webp"
-    preco: "R$ 165"
+    preco: 165
     descricao: "O bigodudo mais invocado do Looney Tunes em versão gangster de Birmingham. Cerca de 27 cm."
 
   - nome: "Coringa (Joker)"
@@ -39,41 +42,41 @@ pecas:
       - "/assets/img/estoque/joker-3.webp"
       - "/assets/img/estoque/joker-4.webp"
       - "/assets/img/estoque/joker-2.webp"
-    preco: "R$ 265"
+    preco: 265
     descricao: "O Príncipe Palhaço do Crime sobre o baú temático, que também é porta-objetos. Cerca de 27 cm."
 
   - nome: "Scorpion (Mortal Kombat)"
     categoria: "Personagens"
     imagem: "/assets/img/estoque/scorpion.webp"
-    preco: "R$ 160"
+    preco: 160
     descricao: "Get over here! O ninja mais icônico dos games de luta. Cerca de 30 cm."
 
   - nome: "R2-D2 (Star Wars)"
     categoria: "Star Wars"
     imagem: "/assets/img/estoque/r2d2.webp"
-    preco: "R$ 290"
+    preco: 290
     descricao: "O droide mais corajoso da galáxia, cheio de detalhes. Cerca de 30 cm."
 
   - nome: "Sabre de Luz do Obi-Wan"
     categoria: "Star Wars"
     imagem: "/assets/img/estoque/sabre-obi-wan.webp"
-    preco: "R$ 85"
+    preco: 85
     descricao: "Réplica decorativa do sabre do mestre Jedi. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Sabre de Luz do Darth Vader"
     categoria: "Star Wars"
     imagem: "/assets/img/estoque/sabre-darth-vader.webp"
-    preco: "R$ 85"
+    preco: 85
     descricao: "Réplica do icônico sabre vermelho do Lorde Sith. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Sabre de Luz do Luke Skywalker"
     categoria: "Star Wars"
     imagem: "/assets/img/estoque/sabre-luke.webp"
-    preco: "R$ 85"
+    preco: 85
     descricao: "Réplica decorativa do sabre do jovem Jedi. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Base para Sabre de Luz"
     categoria: "Acessórios"
     imagem: "/assets/img/estoque/base-sabre.webp"
-    preco: "R$ 35"
+    preco: 35
     descricao: "Suporte para expor seu sabre com estilo. Combina com qualquer sabre acima."

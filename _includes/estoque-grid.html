@@ -33,7 +33,7 @@
     class="estoque-card"
     data-categoria="{{ peca.categoria | default: 'Outros' | escape }}"
     data-nome="{{ peca.nome | escape }}"
-    data-preco="{{ peca.preco | remove: 'R$' | remove: '.' | replace: ',', '.' | strip }}"
+    data-preco="{{ peca.preco }}"
     data-ordem="{{ forloop.index0 }}"
   >
     {%- if fotos and fotos.size > 0 -%}
@@ -84,7 +84,7 @@
       <p class="estoque-card-desc">{{ peca.descricao }}</p>
       {%- endif -%}
       <div class="estoque-card-footer">
-        <span class="estoque-card-price">{{ peca.preco }}</span>
+        <span class="estoque-card-price">R$ {{ peca.preco }}</span>
         <a
           class="btn btn-gradient estoque-card-btn"
           href="https://ig.me/m/{{ site.instagram.username }}"

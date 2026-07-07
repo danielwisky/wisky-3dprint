@@ -46,6 +46,9 @@
         "name": {{ peca.nome | jsonify }},
         "sku": {{ peca.nome | slugify | prepend: "w3d-" | jsonify }},
         "brand": { "@type": "Brand", "name": "Wisky 3D" },
+        {%- if peca.categoria and peca.categoria != "" %}
+        "category": {{ peca.categoria | jsonify }},
+        {%- endif %}
         {%- if peca.descricao and peca.descricao != "" %}
         "description": {{ peca.descricao | jsonify }},
         {%- endif %}
@@ -54,7 +57,7 @@
         {%- endif %}
         "offers": {
           "@type": "Offer",
-          "price": {{ peca.preco | remove: "R$" | remove: "." | strip | jsonify }},
+          "price": {{ peca.preco | jsonify }},
           "priceCurrency": "BRL",
           "availability": "https://schema.org/InStock",
           "url": {{ "/pronta-entrega/" | absolute_url | jsonify }},
