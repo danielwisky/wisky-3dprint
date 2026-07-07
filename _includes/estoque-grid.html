@@ -7,7 +7,7 @@
   <div class="estoque-filters" role="group" aria-label="Filtrar por categoria">
     <button type="button" class="estoque-chip is-active" data-filtro="todos" aria-pressed="true">Todos</button>
     {%- for cat in categorias -%}
-    <button type="button" class="estoque-chip" data-filtro="{{ cat }}" aria-pressed="false">{{ cat }}</button>
+    <button type="button" class="estoque-chip" data-filtro="{{ cat | escape }}" aria-pressed="false">{{ cat | escape }}</button>
     {%- endfor -%}
   </div>
   {%- endif -%}
@@ -31,8 +31,8 @@
   {%- endif -%}
   <article
     class="estoque-card"
-    data-categoria="{{ peca.categoria | default: 'Outros' }}"
-    data-nome="{{ peca.nome }}"
+    data-categoria="{{ peca.categoria | default: 'Outros' | escape }}"
+    data-nome="{{ peca.nome | escape }}"
     data-preco="{{ peca.preco | remove: 'R$' | remove: '.' | replace: ',', '.' | strip }}"
     data-ordem="{{ forloop.index0 }}"
   >
@@ -77,7 +77,7 @@
     {%- endif -%}
     <div class="estoque-card-body">
       {%- if peca.categoria -%}
-      <span class="estoque-card-cat">{{ peca.categoria }}</span>
+      <span class="estoque-card-cat">{{ peca.categoria | escape }}</span>
       {%- endif -%}
       <h3 class="estoque-card-title">{{ peca.nome }}</h3>
       {%- if peca.descricao -%}
