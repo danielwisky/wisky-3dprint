@@ -1,5 +1,26 @@
 {%- assign pecas = site.data.estoque.pecas -%}
 {%- if pecas and pecas.size > 0 -%}
+{%- assign categorias = pecas | map: "categoria" | compact | uniq -%}
+{%- if pecas.size > 1 -%}
+<div class="estoque-controls reveal" data-estoque-controls>
+  {%- if categorias.size > 1 -%}
+  <div class="estoque-filters" role="group" aria-label="Filtrar por categoria">
+    <button type="button" class="estoque-chip is-active" data-filtro="todos">Todos</button>
+    {%- for cat in categorias -%}
+    <button type="button" class="estoque-chip" data-filtro="{{ cat }}">{{ cat }}</button>
+    {%- endfor -%}
+  </div>
+  {%- endif -%}
+  <div class="estoque-sort">
+    <select class="estoque-sort-select" data-estoque-sort aria-label="Ordenar peças">
+      <option value="padrao">Ordenar por…</option>
+      <option value="preco-asc">Preço: menor → maior</option>
+      <option value="preco-desc">Preço: maior → menor</option>
+      <option value="nome-asc">Nome (A–Z)</option>
+    </select>
+  </div>
+</div>
+{%- endif -%}
 <div class="estoque-grid reveal-stagger">
   {%- for peca in pecas -%}
   {%- comment -%} Monta a lista de fotos: usa "imagens" (lista) ou cai para "imagem" (única). {%- endcomment -%}
@@ -7,7 +28,13 @@
   {%- if fotos == nil and peca.imagem and peca.imagem != "" -%}
     {%- assign fotos = peca.imagem | split: "§" -%}
   {%- endif -%}
-  <article class="estoque-card">
+  <article
+    class="estoque-card"
+    data-categoria="{{ peca.categoria | default: 'Outros' }}"
+    data-nome="{{ peca.nome }}"
+    data-preco="{{ peca.preco | remove: 'R$' | remove: '.' | replace: ',', '.' | strip }}"
+    data-ordem="{{ forloop.index0 }}"
+  >
     {%- if fotos and fotos.size > 0 -%}
     <div class="estoque-card-media"{% if fotos.size > 1 %} data-carousel{% endif %}>
       {%- for foto in fotos -%}
@@ -69,6 +96,7 @@
   </article>
   {%- endfor -%}
 </div>
+<p class="estoque-none" data-estoque-none hidden>Nenhuma peça nessa categoria por enquanto.</p>
 {%- else -%}
 <div class="estoque-empty">
   <div class="estoque-empty-icon" aria-hidden="true">

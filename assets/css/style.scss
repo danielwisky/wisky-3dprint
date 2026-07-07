@@ -901,10 +901,86 @@ code {
   padding-top: calc(#{$nav-h} + 4rem);
 }
 
+// Barra de filtro (chips) + ordenação
+.estoque-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.estoque-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.estoque-chip {
+  padding: 0.45rem 1rem;
+  font-family: $font-body;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--cyan) 45%, transparent);
+    transform: translateY(-1px);
+  }
+
+  &.is-active {
+    color: #fff;
+    background: var(--gradient);
+    border-color: transparent;
+  }
+}
+
+.estoque-sort-select {
+  padding: 0.5rem 2.2rem 0.5rem 0.9rem;
+  font-family: $font-body;
+  font-size: 0.9rem;
+  color: var(--text);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  appearance: none;
+  // Seta customizada (chevron) via SVG inline, herda cor do texto.
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  transition: border-color 0.2s ease;
+
+  &:hover,
+  &:focus {
+    border-color: color-mix(in srgb, var(--cyan) 45%, transparent);
+    outline: none;
+  }
+}
+
 .estoque-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+}
+
+// Escondido pelo filtro de categoria (JS). Seletor combinado para ganhar da
+// regra .estoque-card { display: flex } independentemente da ordem no arquivo.
+.estoque-card.estoque-card--hidden {
+  display: none;
+}
+
+.estoque-none {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--muted);
 }
 
 .estoque-card {
@@ -1545,6 +1621,15 @@ body.gallery-modal-open {
   .estoque-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
+  }
+
+  .estoque-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .estoque-sort-select {
+    width: 100%;
   }
 
   .estoque-teaser {

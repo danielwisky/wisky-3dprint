@@ -366,4 +366,70 @@
       });
     });
   })();
+
+  // Filtro (chips de categoria) + ordenação da vitrine de pronta entrega.
+  (function () {
+    var controls = document.querySelector("[data-estoque-controls]");
+    var grid = document.querySelector(".estoque-grid");
+    if (!controls || !grid) return;
+
+    var cards = Array.prototype.slice.call(grid.querySelectorAll(".estoque-card"));
+    if (!cards.length) return;
+
+    var chips = Array.prototype.slice.call(controls.querySelectorAll(".estoque-chip"));
+    var sortSelect = controls.querySelector("[data-estoque-sort]");
+    var noneMsg = document.querySelector("[data-estoque-none]");
+
+    var filtroAtual = "todos";
+
+    function aplicarFiltro() {
+      var visiveis = 0;
+      cards.forEach(function (card) {
+        var mostra = filtroAtual === "todos" || card.getAttribute("data-categoria") === filtroAtual;
+        card.classList.toggle("estoque-card--hidden", !mostra);
+        if (mostra) visiveis++;
+      });
+      if (noneMsg) noneMsg.hidden = visiveis > 0;
+    }
+
+    function ordenar(modo) {
+      var ordenados = cards.slice();
+      ordenados.sort(function (a, b) {
+        if (modo === "preco-asc" || modo === "preco-desc") {
+          var pa = parseFloat(a.getAttribute("data-preco")) || 0;
+          var pb = parseFloat(b.getAttribute("data-preco")) || 0;
+          return modo === "preco-asc" ? pa - pb : pb - pa;
+        }
+        if (modo === "nome-asc") {
+          return (a.getAttribute("data-nome") || "").localeCompare(
+            b.getAttribute("data-nome") || "",
+            "pt-BR",
+            { sensitivity: "base" }
+          );
+        }
+        // padrão: ordem original do YAML
+        return (parseInt(a.getAttribute("data-ordem"), 10) || 0) -
+          (parseInt(b.getAttribute("data-ordem"), 10) || 0);
+      });
+      ordenados.forEach(function (card) {
+        grid.appendChild(card);
+      });
+    }
+
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        filtroAtual = chip.getAttribute("data-filtro") || "todos";
+        chips.forEach(function (c) {
+          c.classList.toggle("is-active", c === chip);
+        });
+        aplicarFiltro();
+      });
+    });
+
+    if (sortSelect) {
+      sortSelect.addEventListener("change", function () {
+        ordenar(sortSelect.value);
+      });
+    }
+  })();
 </script>
