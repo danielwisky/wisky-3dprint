@@ -2,7 +2,7 @@
 {% assign post_url = "https://www.instagram.com/" | append: post_type | append: "/" | append: include.id | append: "/" %}
 {%- comment -%} Só o título (primeira linha da legenda). Título e corpo vêm separados por espaço duplo. {%- endcomment -%}
 {% assign caption_title = include.caption | split: "  " | first | strip %}
-<article class="gallery-item{% if include.hidden %} is-gallery-hidden{% endif %}"{% if include.hidden %} hidden{% endif %}>
+<article class="gallery-item{% if include.hidden %} is-gallery-hidden{% endif %}"{% if include.hidden %} hidden{% endif %} data-ratio="{% if include.type == 'reel' %}1.7778{% else %}1.3333{% endif %}" style="--tile-img: url('{{ include.image | relative_url }}');">
   <button
     type="button"
     class="gallery-trigger"
