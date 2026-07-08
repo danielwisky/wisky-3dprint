@@ -2,7 +2,9 @@
 {% assign post_url = "https://www.instagram.com/" | append: post_type | append: "/" | append: include.id | append: "/" %}
 {%- comment -%} Só o título (primeira linha da legenda). Título e corpo vêm separados por espaço duplo. {%- endcomment -%}
 {% assign caption_title = include.caption | split: "  " | first | strip %}
-<article class="gallery-item{% if include.hidden %} is-gallery-hidden{% endif %}"{% if include.hidden %} hidden{% endif %} data-ratio="{% if include.type == 'reel' %}1.7778{% else %}1.3333{% endif %}" style="--tile-img: url('{{ include.image | relative_url }}');">
+{%- comment -%} Grade usa o thumb (leve); o lightbox usa a imagem cheia (include.image). {%- endcomment -%}
+{% assign thumb = include.image | replace: ".webp", "-thumb.webp" %}
+<article class="gallery-item{% if include.hidden %} is-gallery-hidden{% endif %}"{% if include.hidden %} hidden{% endif %} style="--tile-img: url('{{ thumb | relative_url }}');">
   <button
     type="button"
     class="gallery-trigger"
@@ -14,7 +16,7 @@
     {%- assign img_alt = caption_title | default: "Trabalho impresso em 3D por @" | append: site.instagram.username -%}
     <img
       class="gallery-image"
-      src="{{ include.image | relative_url }}"
+      src="{{ thumb | relative_url }}"
       alt="{{ img_alt }}"
       loading="lazy"
       decoding="async"
@@ -24,5 +26,10 @@
         <path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/>
       </svg>
     </span>
+    {% if post_type == "reel" %}
+    <span class="gallery-badge" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    </span>
+    {% endif %}
   </button>
 </article>

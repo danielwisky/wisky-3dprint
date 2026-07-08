@@ -154,9 +154,6 @@
         if (wrapper) wrapper.hidden = true;
       }
 
-      // Reposiciona o masonry com os itens recém-revelados.
-      grid.dispatchEvent(new CustomEvent("gallery:relayout"));
-
       if (toReveal.length) {
         var firstTrigger = toReveal[0].querySelector(".gallery-trigger");
         if (firstTrigger) firstTrigger.focus();
@@ -547,92 +544,5 @@
       if (sortSelect && sortSelect.value !== "padrao") ordenar(sortSelect.value);
       aplicarFiltro(false); // sem fade no load (evita conflito com o reveal-stagger)
     })();
-  })();
-
-  // Masonry da galeria (Forma A): ordem de leitura preservada, empacotando na
-  // coluna mais curta. Usa a proporção conhecida (data-ratio) para posicionar
-  // sem esperar as imagens carregarem — zero layout shift.
-  (function () {
-    var grid = document.querySelector(".gallery-grid");
-    if (!grid) return;
-
-    var items = Array.prototype.slice.call(grid.querySelectorAll(".gallery-item"));
-    if (!items.length) return;
-
-    var rootFont = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-
-    // Converte valores de --gap (ex.: "1rem", "12px") para pixels.
-    function toPx(value) {
-      value = String(value).trim();
-      var n = parseFloat(value);
-      if (!isFinite(n)) return 0;
-      return value.indexOf("rem") >= 0 ? n * rootFont : n;
-    }
-
-    function relayout() {
-      var cs = getComputedStyle(grid);
-      var cols = Math.max(1, Math.round(parseFloat(cs.getPropertyValue("--cols")) || 4));
-      var gap = toPx(cs.getPropertyValue("--gap") || "16");
-      var colWidth = (grid.clientWidth - (cols - 1) * gap) / cols;
-
-      var colHeights = [];
-      for (var c = 0; c < cols; c++) colHeights.push(0);
-
-      items.forEach(function (item) {
-        if (item.hidden || item.classList.contains("is-gallery-hidden")) return;
-
-        var ratio = parseFloat(item.getAttribute("data-ratio")) || 1.3333;
-        var height = colWidth * ratio;
-
-        // Coluna mais curta (empata pela mais à esquerda → mantém a ordem).
-        var min = 0;
-        for (var i = 1; i < cols; i++) {
-          if (colHeights[i] < colHeights[min]) min = i;
-        }
-
-        item.style.width = colWidth + "px";
-        item.style.height = height + "px";
-        item.style.left = (min * (colWidth + gap)) + "px";
-        item.style.top = colHeights[min] + "px";
-
-        colHeights[min] += height + gap;
-      });
-
-      var tallest = 0;
-      for (var j = 0; j < cols; j++) {
-        if (colHeights[j] > tallest) tallest = colHeights[j];
-      }
-      grid.style.height = (tallest > 0 ? tallest - gap : 0) + "px";
-    }
-
-    var raf = null;
-    function scheduleRelayout() {
-      if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(relayout);
-    }
-
-    grid.classList.add("is-masonry");
-    relayout();
-
-    window.addEventListener("resize", scheduleRelayout, { passive: true });
-    window.addEventListener("load", relayout);
-    grid.addEventListener("gallery:relayout", relayout);
-
-    // Refina a proporção com as dimensões reais da imagem, caso o type não bata.
-    items.forEach(function (item) {
-      var img = item.querySelector("img");
-      if (!img) return;
-      function refine() {
-        if (!img.naturalWidth || !img.naturalHeight) return;
-        var real = img.naturalHeight / img.naturalWidth;
-        var current = parseFloat(item.getAttribute("data-ratio")) || 0;
-        if (Math.abs(real - current) > 0.02) {
-          item.setAttribute("data-ratio", real.toFixed(4));
-          scheduleRelayout();
-        }
-      }
-      if (img.complete) refine();
-      else img.addEventListener("load", refine);
-    });
   })();
 </script>

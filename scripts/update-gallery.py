@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 """Baixa as últimas 24 fotos do @wisky.3dprint e atualiza _data/instagram_posts.yml.
 
-Também gera (se Pillow estiver instalado) uma imagem og-image.jpg 1200x630
-para preview ao compartilhar o link nas redes sociais.
+Cada foto é salva como 2 WebP: {code}.webp (full, usado no lightbox) e
+{code}-thumb.webp (menor, usado na grade). Também gera og-image.jpg 1200x630
+para preview ao compartilhar o link. Requer Pillow (o wrapper .sh instala).
 
 USO RECOMENDADO (cria venv + instala Pillow automaticamente):
     ./scripts/update-gallery.sh
-
-Uso direto (sem venv, sem og-image):
-    python3 scripts/update-gallery.py
 """
 
 import json
@@ -24,6 +22,12 @@ IG_APP_ID = "936619743392459"
 IG_UA = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15"
 PAGE_SIZE = 12          # o IG entrega ~12 itens por página, independente do count
 TARGET_IMAGE_WIDTH = 1080  # qualidade alvo ao escolher entre os candidates
+
+# Cada foto vira 2 WebP: full (lightbox) + thumb (grade). Consistente com estoque/.
+FULL_WIDTH = 1080
+THUMB_WIDTH = 540
+WEBP_QUALITY_FULL = 82
+WEBP_QUALITY_THUMB = 80
 
 OG_IMAGE_PATH = "assets/img/og-image.jpg"
 OG_TITLE = "Wisky 3D Print"
@@ -99,30 +103,65 @@ def collect_posts():
     return posts[:MAX_POSTS]
 
 
+def _save_webp_variants(content, code):
+    """Gera {code}.webp (full, lightbox) e {code}-thumb.webp (thumb, grade)."""
+    from io import BytesIO
+    from PIL import Image
+
+    with Image.open(BytesIO(content)) as im:
+        im = im.convert("RGB")
+        w, h = im.size
+
+        full_w = min(w, FULL_WIDTH)  # nunca faz upscale
+        full = im if full_w == w else im.resize((full_w, round(h * full_w / w)), Image.LANCZOS)
+        full.save(f"{GALLERY_DIR}/{code}.webp", "WEBP", quality=WEBP_QUALITY_FULL, method=6)
+
+        thumb_w = min(w, THUMB_WIDTH)
+        thumb = im.resize((thumb_w, round(h * thumb_w / w)), Image.LANCZOS)
+        thumb.save(f"{GALLERY_DIR}/{code}-thumb.webp", "WEBP", quality=WEBP_QUALITY_THUMB, method=6)
+
+
+def _code_of(filename):
+    """Código base de um arquivo da galeria (remove sufixos -thumb e .webp)."""
+    base = filename[:-5] if filename.endswith(".webp") else filename
+    if base.endswith("-thumb"):
+        base = base[:-6]
+    return base
+
+
 def prune_orphans(keep_paths):
-    """Remove .jpg em GALLERY_DIR que não estão mais no feed (não referenciados).
+    """Remove .webp em GALLERY_DIR (full + thumb) que não estão mais no feed.
 
     Trava de segurança: se a coleta veio muito menor que o que já existe no
     disco (provável falha/bloqueio da API), não apaga nada."""
-    keep = {os.path.basename(p) for p in keep_paths}
-    if not keep:
+    keep_codes = {_code_of(os.path.basename(p)) for p in keep_paths}
+    if not keep_codes:
         return []
 
-    existing = [n for n in os.listdir(GALLERY_DIR) if n.endswith(".jpg")]
-    if len(keep) < len(existing) * 0.5:
+    existing = [n for n in os.listdir(GALLERY_DIR) if n.endswith(".webp")]
+    existing_codes = {_code_of(n) for n in existing}
+    if len(keep_codes) < len(existing_codes) * 0.5:
         print(
-            f"Prune de órfãs ignorado: coleta ({len(keep)}) bem menor que o disco "
-            f"({len(existing)}) — possível falha da API"
+            f"Prune de órfãs ignorado: coleta ({len(keep_codes)}) bem menor que o disco "
+            f"({len(existing_codes)}) — possível falha da API"
         )
         return []
 
-    removed = [n for n in existing if n not in keep]
+    removed = [n for n in existing if _code_of(n) not in keep_codes]
     for name in removed:
         os.remove(os.path.join(GALLERY_DIR, name))
     return removed
 
 
 def main():
+    try:
+        import PIL  # noqa: F401
+    except ImportError:
+        raise SystemExit(
+            "Pillow é necessário para gerar os WebP da galeria. "
+            "Rode ./scripts/update-gallery.sh (cria o venv e instala)."
+        )
+
     os.makedirs(GALLERY_DIR, exist_ok=True)
 
     posts = collect_posts()
@@ -133,8 +172,8 @@ def main():
     for post in posts:
         code = post["code"]
         post_type = post["type"]
-        image_path = f"{GALLERY_DIR}/{code}.jpg"
-        web_path = f"/assets/img/gallery/{code}.jpg"
+        image_path = f"{GALLERY_DIR}/{code}.webp"  # full (lightbox); a grade usa o -thumb
+        web_path = f"/assets/img/gallery/{code}.webp"
 
         try:
             img_req = urllib.request.Request(post["image_url"], headers={"User-Agent": "Mozilla/5.0"})
@@ -142,10 +181,9 @@ def main():
                 content = img_response.read()
             if len(content) < MIN_VALID_BYTES:
                 warnings.append(f"  {code}: download muito pequeno ({len(content)} bytes), pode estar quebrado")
-            with open(image_path, "wb") as img_file:
-                img_file.write(content)
+            _save_webp_variants(content, code)
         except Exception as exc:
-            warnings.append(f"  {code}: falha no download ({exc})")
+            warnings.append(f"  {code}: falha no download/conversão ({exc})")
             continue
 
         alt = post.get("caption", "")
