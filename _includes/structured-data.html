@@ -28,12 +28,12 @@
 }
 </script>
 {%- endif %}
-{%- if page.url == "/pronta-entrega/" and site.data.estoque.pecas and site.data.estoque.pecas.size > 0 %}
+{%- if page.url == "/loja/" and site.data.estoque.pecas and site.data.estoque.pecas.size > 0 %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  "name": "Pronta Entrega — {{ site.title }}",
+  "name": "Loja — {{ site.title }}",
   "itemListElement": [
     {%- for peca in site.data.estoque.pecas %}
     {%- assign fotos = peca.imagens -%}
@@ -59,8 +59,8 @@
           "@type": "Offer",
           "price": {{ peca.preco | jsonify }},
           "priceCurrency": "BRL",
-          "availability": "https://schema.org/InStock",
-          "url": {{ "/pronta-entrega/" | absolute_url | jsonify }},
+          "availability": {% if peca.pronta_entrega %}"https://schema.org/InStock"{% else %}"https://schema.org/PreOrder"{% endif %},
+          "url": {{ "/loja/" | absolute_url | jsonify }},
           "seller": { "@type": "Organization", "name": {{ site.title | jsonify }} }
         }
       }

@@ -1,4 +1,4 @@
-# Peças em PRONTA ENTREGA (já impressas, envio imediato).
+# Peças da LOJA (já impressas ou sob encomenda).
 #
 # Como usar:
 #   - Adicione ou edite uma peça nos blocos abaixo.
@@ -15,6 +15,9 @@
 #     filtro são ordenados sozinhos, em ordem alfabética.
 #     Use "categoria" (uma) OU "categorias" (várias); se usar as duas,
 #     "categorias" tem prioridade.
+#   - pronta_entrega: (opcional) true se a peça já está impressa e pronta
+#     pra envio imediato. A peça ganha um selo "Pronta entrega" no card.
+#     Sem esse campo (ou com false), a peça é tratada como sob encomenda.
 #   - preco:          apenas o número, em reais cheios (ex: preco: 265).
 #     Não escreva "R$" nem centavos — o site formata o "R$" sozinho.
 #     (Precisou de centavos/milhar? Me chame que ajusto a formatação.)
@@ -28,6 +31,7 @@
 pecas:
   - nome: "Pikachu Cosplay Angel (Stitch)"
     categorias: ["Personagens", "Pokémon"]
+    pronta_entrega: true
     imagens:
       - "/assets/img/estoque/pikachu-stitch-1.webp"
       - "/assets/img/estoque/pikachu-stitch-2.webp"
@@ -37,6 +41,7 @@ pecas:
 
   - nome: "Taz Peaky Blinders"
     categorias: ["Personagens", "Urban Vibes", "Looney Tunes"]
+    pronta_entrega: true
     imagens:
       - "/assets/img/estoque/taz-3.webp"
       - "/assets/img/estoque/taz-2.webp"
@@ -46,6 +51,7 @@ pecas:
 
   - nome: "Yosemite Sam Peaky Blinders"
     categorias: ["Personagens", "Urban Vibes", "Looney Tunes"]
+    pronta_entrega: true
     imagens:
       - "/assets/img/estoque/sam-3.webp"
       - "/assets/img/estoque/sam-2.webp"
@@ -55,6 +61,7 @@ pecas:
 
   - nome: "Coringa (Joker)"
     categorias: ["Personagens", "Urban Vibes", "DC"]
+    pronta_entrega: true
     imagens:
       - "/assets/img/estoque/joker-1.webp"
       - "/assets/img/estoque/joker-3.webp"
@@ -65,36 +72,42 @@ pecas:
 
   - nome: "Scorpion (Mortal Kombat)"
     categorias: ["Personagens", "Mortal Kombat"]
+    pronta_entrega: true
     imagem: "/assets/img/estoque/scorpion.webp"
     preco: 160
     descricao: "Get over here! O ninja mais icônico dos games de luta. Cerca de 30 cm."
 
   - nome: "R2-D2 (Star Wars)"
     categorias: ["Personagens", "Star Wars"]
+    pronta_entrega: true
     imagem: "/assets/img/estoque/r2d2.webp"
     preco: 290
     descricao: "O droide mais corajoso da galáxia, cheio de detalhes. Cerca de 30 cm."
 
   - nome: "Sabre de Luz do Obi-Wan"
     categorias: ["Star Wars", "Sabres de Luz"]
+    pronta_entrega: true
     imagem: "/assets/img/estoque/sabre-obi-wan.webp"
     preco: 85
     descricao: "Réplica decorativa do sabre do mestre Jedi. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Sabre de Luz do Darth Vader"
     categorias: ["Star Wars", "Sabres de Luz"]
+    pronta_entrega: true
     imagem: "/assets/img/estoque/sabre-darth-vader.webp"
     preco: 85
     descricao: "Réplica do icônico sabre vermelho do Lorde Sith. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Sabre de Luz do Luke Skywalker"
     categorias: ["Star Wars", "Sabres de Luz"]
+    pronta_entrega: true
     imagem: "/assets/img/estoque/sabre-luke.webp"
     preco: 85
     descricao: "Réplica decorativa do sabre do jovem Jedi. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Base para Sabre de Luz"
     categorias: ["Acessórios", "Sabres de Luz"]
+    pronta_entrega: true
     imagem: "/assets/img/estoque/base-sabre.webp"
     preco: 35
     descricao: "Suporte para expor seu sabre com estilo. Combina com qualquer sabre acima."

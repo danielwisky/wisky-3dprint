@@ -318,7 +318,7 @@ code {
   }
 }
 
-// Separa os links âncora (one-page) do link de página "Pronta entrega"
+// Separa os links âncora (one-page) do link de página "Loja"
 .site-nav-menu .site-nav-sep {
   margin-left: 0.4rem;
   padding-left: 0.55rem;
@@ -938,7 +938,7 @@ code {
   }
 }
 
-// Pronta entrega (estoque)
+// Loja (estoque)
 .section-estoque {
   padding-top: calc(#{$nav-h} + 4rem);
 }
@@ -1289,6 +1289,23 @@ code {
   object-fit: contain;
   object-position: center;
   transition: transform 0.4s ease;
+}
+
+// Selo "Pronta entrega" sobre a foto do card.
+.estoque-badge {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 2;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--on-accent);
+  background: var(--gradient);
+  border-radius: 999px;
+  pointer-events: none;
 }
 
 .estoque-card:hover .estoque-slide.is-active .estoque-card-image {

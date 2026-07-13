@@ -406,7 +406,8 @@
       btn.addEventListener("click", function () {
         var nome = btn.getAttribute("data-peca");
         if (!nome) return;
-        var msg = "Oi! Tenho interesse na peça " + nome + " (pronta entrega).";
+        var prontaEntrega = btn.getAttribute("data-pronta-entrega") === "true";
+        var msg = "Oi! Tenho interesse na peça " + nome + (prontaEntrega ? " (pronta entrega)." : ".");
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(msg).catch(function () {});
         }
@@ -414,7 +415,7 @@
     });
   })();
 
-  // Filtro (chips) + ordenação + estado na URL da vitrine de pronta entrega.
+  // Filtro (chips) + ordenação + estado na URL da vitrine da loja.
   (function () {
     var controls = document.querySelector("[data-estoque-controls]");
     var grid = document.querySelector(".estoque-grid");
