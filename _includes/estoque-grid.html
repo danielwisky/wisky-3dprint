@@ -1,24 +1,60 @@
 {%- assign pecas = site.data.estoque.pecas -%}
 {%- if pecas and pecas.size > 0 -%}
-{%- assign categorias = pecas | map: "categoria" | compact | uniq -%}
+{%- comment -%} União de todas as categorias (aceita "categoria" única ou a lista "categorias"). Liquid não tem flatten, então junta num texto com "§" e desdobra. {%- endcomment -%}
+{%- assign _cats = "" -%}
+{%- for peca in pecas -%}
+  {%- if peca.categorias -%}
+    {%- for c in peca.categorias -%}{%- assign _cats = _cats | append: c | append: "§" -%}{%- endfor -%}
+  {%- elsif peca.categoria and peca.categoria != "" -%}
+    {%- assign _cats = _cats | append: peca.categoria | append: "§" -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- comment -%} Chips em ordem alfabética. Os selos no card seguem outra ordem (por tamanho, via JS). {%- endcomment -%}
+{%- assign categorias = _cats | split: "§" | uniq | sort_natural -%}
 {%- if pecas.size > 1 -%}
 <div class="estoque-controls reveal" data-estoque-controls>
+  <div class="estoque-controls-top">
+    <div class="estoque-search">
+      <svg class="estoque-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+      </svg>
+      <input type="search" class="estoque-search-input" data-estoque-search placeholder="Buscar peça por nome…" aria-label="Buscar peça por nome" autocomplete="off">
+    </div>
+    <div class="estoque-top-actions">
+      {%- if categorias.size > 1 -%}
+      <button type="button" class="estoque-toggle" data-estoque-toggle aria-expanded="true" aria-controls="estoque-filters-panel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M4 5h16M7 12h10M10 19h4"/>
+        </svg>
+        <span>Filtros</span>
+        <svg class="estoque-toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </button>
+      {%- endif -%}
+      <div class="estoque-sort">
+        <select class="estoque-sort-select" data-estoque-sort aria-label="Ordenar peças">
+          <option value="padrao">Ordenar por…</option>
+          <option value="preco-asc">Preço: menor → maior</option>
+          <option value="preco-desc">Preço: maior → menor</option>
+          <option value="nome-asc">Nome (A–Z)</option>
+        </select>
+      </div>
+    </div>
+  </div>
   {%- if categorias.size > 1 -%}
-  <div class="estoque-filters" role="group" aria-label="Filtrar por categoria">
-    <button type="button" class="estoque-chip is-active" data-filtro="todos" aria-pressed="true">Todos</button>
+  <div class="estoque-filters" id="estoque-filters-panel" role="group" aria-label="Filtrar por categoria">
+    <button type="button" class="estoque-chip is-active" data-filtro="todos" aria-pressed="true">Todos <span class="estoque-chip-count" aria-hidden="true"></span></button>
     {%- for cat in categorias -%}
-    <button type="button" class="estoque-chip" data-filtro="{{ cat | escape }}" aria-pressed="false">{{ cat | escape }}</button>
+    <button type="button" class="estoque-chip" data-filtro="{{ cat | escape }}" aria-pressed="false">{{ cat | escape }} <span class="estoque-chip-count" aria-hidden="true"></span></button>
     {%- endfor -%}
   </div>
-  {%- endif -%}
-  <div class="estoque-sort">
-    <select class="estoque-sort-select" data-estoque-sort aria-label="Ordenar peças">
-      <option value="padrao">Ordenar por…</option>
-      <option value="preco-asc">Preço: menor → maior</option>
-      <option value="preco-desc">Preço: maior → menor</option>
-      <option value="nome-asc">Nome (A–Z)</option>
-    </select>
+  <div class="estoque-active" data-estoque-active hidden>
+    <span class="estoque-active-label">Filtros:</span>
+    <div class="estoque-active-pills" data-estoque-active-pills></div>
+    <button type="button" class="estoque-clear" data-estoque-clear>Limpar filtros</button>
   </div>
+  {%- endif -%}
 </div>
 <p class="estoque-count" data-estoque-count role="status">Mostrando {{ pecas.size }} {% if pecas.size == 1 %}peça{% else %}peças{% endif %}</p>
 {%- endif -%}
@@ -29,9 +65,15 @@
   {%- if fotos == nil and peca.imagem and peca.imagem != "" -%}
     {%- assign fotos = peca.imagem | split: "§" -%}
   {%- endif -%}
+  {%- comment -%} Categorias da peça: usa "categorias" (lista) ou cai para "categoria" (única). {%- endcomment -%}
+  {%- assign cats = peca.categorias -%}
+  {%- if cats == nil -%}
+    {%- assign catFallback = peca.categoria | default: "Outros" -%}
+    {%- assign cats = catFallback | split: "§" -%}
+  {%- endif -%}
   <article
     class="estoque-card"
-    data-categoria="{{ peca.categoria | default: 'Outros' | escape }}"
+    data-categorias="{{ cats | join: '§' | escape }}"
     data-nome="{{ peca.nome | escape }}"
     data-preco="{{ peca.preco }}"
     data-ordem="{{ forloop.index0 }}"
@@ -76,8 +118,12 @@
     </div>
     {%- endif -%}
     <div class="estoque-card-body">
-      {%- if peca.categoria -%}
-      <span class="estoque-card-cat">{{ peca.categoria | escape }}</span>
+      {%- if peca.categorias or peca.categoria -%}
+      <div class="estoque-card-cats">
+        {%- for c in cats -%}
+        <span class="estoque-card-cat">{{ c | escape }}</span>
+        {%- endfor -%}
+      </div>
       {%- endif -%}
       <h3 class="estoque-card-title">{{ peca.nome }}</h3>
       {%- if peca.descricao -%}

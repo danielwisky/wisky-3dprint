@@ -6,6 +6,15 @@
 #     Use um rótulo curto e reaproveite os existentes (ex: "Personagens",
 #     "Star Wars", "Acessórios"). Criar uma categoria nova = digitar um nome
 #     novo; o chip aparece sozinho. Sem categoria, a peça vira "Outros".
+#   - categorias:     (opcional) várias categorias de uma vez, como lista.
+#     Ex:  categorias: ["Personagens", "Pokémon"]
+#     A peça aparece em todos esses chips e é encontrada quando o cliente
+#     combina filtros (ex: marcar "Personagens" + "Pokémon" ao mesmo tempo).
+#     A ORDEM que você digita aqui é a ordem em que os selos aparecem no card
+#     (costume: da categoria mais ampla para a mais específica). Já os chips do
+#     filtro são ordenados sozinhos, em ordem alfabética.
+#     Use "categoria" (uma) OU "categorias" (várias); se usar as duas,
+#     "categorias" tem prioridade.
 #   - preco:          apenas o número, em reais cheios (ex: preco: 265).
 #     Não escreva "R$" nem centavos — o site formata o "R$" sozinho.
 #     (Precisou de centavos/milhar? Me chame que ajusto a formatação.)
@@ -18,7 +27,7 @@
 
 pecas:
   - nome: "Pikachu Cosplay Angel (Stitch)"
-    categoria: "Pokémon"
+    categorias: ["Personagens", "Pokémon"]
     imagens:
       - "/assets/img/estoque/pikachu-stitch-1.webp"
       - "/assets/img/estoque/pikachu-stitch-2.webp"
@@ -27,7 +36,7 @@ pecas:
     descricao: "O Pikachu mais fofo vestido de Angel, a Stitch rosa. Cerca de 20 cm, com textura de tricô caprichada e detalhes pintados à mão."
 
   - nome: "Taz Peaky Blinders"
-    categoria: "Urban Vibes"
+    categorias: ["Personagens", "Urban Vibes", "Looney Tunes"]
     imagens:
       - "/assets/img/estoque/taz-3.webp"
       - "/assets/img/estoque/taz-2.webp"
@@ -36,7 +45,7 @@ pecas:
     descricao: "O redemoinho mais selvagem do Looney Tunes na pele dos Peaky Blinders. Cerca de 33 cm, com acabamento caprichado."
 
   - nome: "Yosemite Sam Peaky Blinders"
-    categoria: "Urban Vibes"
+    categorias: ["Personagens", "Urban Vibes", "Looney Tunes"]
     imagens:
       - "/assets/img/estoque/sam-3.webp"
       - "/assets/img/estoque/sam-2.webp"
@@ -45,7 +54,7 @@ pecas:
     descricao: "O bigodudo mais invocado do Looney Tunes em versão gangster de Birmingham. Cerca de 27 cm."
 
   - nome: "Coringa (Joker)"
-    categoria: "Urban Vibes"
+    categorias: ["Personagens", "Urban Vibes", "DC"]
     imagens:
       - "/assets/img/estoque/joker-1.webp"
       - "/assets/img/estoque/joker-3.webp"
@@ -55,37 +64,37 @@ pecas:
     descricao: "O Príncipe Palhaço do Crime sobre o baú temático, que também é porta-objetos. Cerca de 27 cm."
 
   - nome: "Scorpion (Mortal Kombat)"
-    categoria: "Mortal Kombat"
+    categorias: ["Personagens", "Mortal Kombat"]
     imagem: "/assets/img/estoque/scorpion.webp"
     preco: 160
     descricao: "Get over here! O ninja mais icônico dos games de luta. Cerca de 30 cm."
 
   - nome: "R2-D2 (Star Wars)"
-    categoria: "Star Wars"
+    categorias: ["Personagens", "Star Wars"]
     imagem: "/assets/img/estoque/r2d2.webp"
     preco: 290
     descricao: "O droide mais corajoso da galáxia, cheio de detalhes. Cerca de 30 cm."
 
   - nome: "Sabre de Luz do Obi-Wan"
-    categoria: "Star Wars"
+    categorias: ["Star Wars", "Sabres de Luz"]
     imagem: "/assets/img/estoque/sabre-obi-wan.webp"
     preco: 85
     descricao: "Réplica decorativa do sabre do mestre Jedi. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Sabre de Luz do Darth Vader"
-    categoria: "Star Wars"
+    categorias: ["Star Wars", "Sabres de Luz"]
     imagem: "/assets/img/estoque/sabre-darth-vader.webp"
     preco: 85
     descricao: "Réplica do icônico sabre vermelho do Lorde Sith. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Sabre de Luz do Luke Skywalker"
-    categoria: "Star Wars"
+    categorias: ["Star Wars", "Sabres de Luz"]
     imagem: "/assets/img/estoque/sabre-luke.webp"
     preco: 85
     descricao: "Réplica decorativa do sabre do jovem Jedi. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Base para Sabre de Luz"
-    categoria: "Acessórios"
+    categorias: ["Acessórios", "Sabres de Luz"]
     imagem: "/assets/img/estoque/base-sabre.webp"
     preco: 35
     descricao: "Suporte para expor seu sabre com estilo. Combina com qualquer sabre acima."
