@@ -18,7 +18,7 @@
 
 pecas:
   - nome: "Pikachu Cosplay Angel (Stitch)"
-    categoria: "Personagens"
+    categoria: "Pokémon"
     imagens:
       - "/assets/img/estoque/pikachu-stitch-1.webp"
       - "/assets/img/estoque/pikachu-stitch-2.webp"
@@ -55,7 +55,7 @@ pecas:
     descricao: "O Príncipe Palhaço do Crime sobre o baú temático, que também é porta-objetos. Cerca de 27 cm."
 
   - nome: "Scorpion (Mortal Kombat)"
-    categoria: "Personagens"
+    categoria: "Mortal Kombat"
     imagem: "/assets/img/estoque/scorpion.webp"
     preco: 160
     descricao: "Get over here! O ninja mais icônico dos games de luta. Cerca de 30 cm."
