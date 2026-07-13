@@ -17,6 +17,15 @@
 #   - Para deixar a vitrine vazia, deixe apenas:  pecas: []
 
 pecas:
+  - nome: "Pikachu Cosplay Angel (Stitch)"
+    categoria: "Personagens"
+    imagens:
+      - "/assets/img/estoque/pikachu-stitch-1.webp"
+      - "/assets/img/estoque/pikachu-stitch-2.webp"
+      - "/assets/img/estoque/pikachu-stitch-3.webp"
+    preco: 95
+    descricao: "O Pikachu mais fofo vestido de Angel, a Stitch rosa. Cerca de 20 cm, com textura de tricô caprichada e detalhes pintados à mão."
+
   - nome: "Taz Peaky Blinders"
     categoria: "Urban Vibes"
     imagens:

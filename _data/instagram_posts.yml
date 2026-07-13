@@ -1,4 +1,8 @@
 posts:
+  - id: "DavCamvRWjb"
+    type: "reel"
+    image: "/assets/img/gallery/DavCamvRWjb.webp"
+    caption: "⚡🌸 MASHUP EXCLUSIVO: PIKACHU STITCH FÊMEA EM IMPRESSÃO 3D! 🌺💙"
   - id: "DafvO3IR_x4"
     type: "reel"
     image: "/assets/img/gallery/DafvO3IR_x4.webp"
@@ -90,7 +94,3 @@ posts:
     type: "p"
     image: "/assets/img/gallery/DX-iGUjERUs.webp"
     caption: "🚜 RETROESCAVADEIRA EM IMPRESSÃO 3D! 🏗️⚙️"
-  - id: "DY-OvZ6kfFO"
-    type: "p"
-    image: "/assets/img/gallery/DY-OvZ6kfFO.webp"
-    caption: "🧱 JOGO DE BALANÇA TETRIS EM IMPRESSÃO 3D! ⚖️🕹️"
