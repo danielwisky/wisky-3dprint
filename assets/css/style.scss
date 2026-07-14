@@ -1291,12 +1291,20 @@ code {
   transition: transform 0.4s ease;
 }
 
-// Selo "Pronta entrega" sobre a foto do card.
-.estoque-badge {
+// Selos ("Pronta entrega", tamanho) sobre a foto do card.
+.estoque-badges {
   position: absolute;
   top: 0.6rem;
   left: 0.6rem;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  pointer-events: none;
+}
+
+.estoque-badge {
   padding: 0.3rem 0.65rem;
   font-size: 0.68rem;
   font-weight: 700;
@@ -1305,7 +1313,11 @@ code {
   color: var(--on-accent);
   background: var(--gradient);
   border-radius: 999px;
-  pointer-events: none;
+}
+
+.estoque-badge--tamanho {
+  color: #1a1f2b;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .estoque-card:hover .estoque-slide.is-active .estoque-card-image {

@@ -1,4 +1,8 @@
 posts:
+  - id: "DayG-byRI_O"
+    type: "reel"
+    image: "/assets/img/gallery/DayG-byRI_O.webp"
+    caption: "⚽🤖 ERLING HAALAND EM IMPRESSÃO 3D! 🇳🇴⚡"
   - id: "DavCamvRWjb"
     type: "reel"
     image: "/assets/img/gallery/DavCamvRWjb.webp"
@@ -90,7 +94,3 @@ posts:
     type: "p"
     image: "/assets/img/gallery/DXdNWnVEUS-.webp"
     caption: "🤠 WOODY DO TOY STORY EM IMPRESSÃO 3D! 🚀⭐"
-  - id: "DX-iGUjERUs"
-    type: "p"
-    image: "/assets/img/gallery/DX-iGUjERUs.webp"
-    caption: "🚜 RETROESCAVADEIRA EM IMPRESSÃO 3D! 🏗️⚙️"

@@ -81,8 +81,15 @@
   >
     {%- if fotos and fotos.size > 0 -%}
     <div class="estoque-card-media"{% if fotos.size > 1 %} data-carousel{% endif %}>
-      {%- if peca.pronta_entrega -%}
-      <span class="estoque-badge">Pronta entrega</span>
+      {%- if peca.pronta_entrega or peca.tamanho_cm -%}
+      <div class="estoque-badges">
+        {%- if peca.pronta_entrega -%}
+        <span class="estoque-badge">Pronta entrega</span>
+        {%- endif -%}
+        {%- if peca.tamanho_cm -%}
+        <span class="estoque-badge estoque-badge--tamanho">{{ peca.tamanho_cm }} cm</span>
+        {%- endif -%}
+      </div>
       {%- endif -%}
       {%- for foto in fotos -%}
       <button type="button" class="img-zoom estoque-slide{% if forloop.first %} is-active{% endif %}" aria-label="Ampliar foto {{ forloop.index }} de {{ peca.nome }}"{% unless forloop.first %} tabindex="-1"{% endunless %}>
@@ -111,8 +118,15 @@
     </div>
     {%- else -%}
     <div class="estoque-card-media estoque-card-media-empty">
-      {%- if peca.pronta_entrega -%}
-      <span class="estoque-badge">Pronta entrega</span>
+      {%- if peca.pronta_entrega or peca.tamanho_cm -%}
+      <div class="estoque-badges">
+        {%- if peca.pronta_entrega -%}
+        <span class="estoque-badge">Pronta entrega</span>
+        {%- endif -%}
+        {%- if peca.tamanho_cm -%}
+        <span class="estoque-badge estoque-badge--tamanho">{{ peca.tamanho_cm }} cm</span>
+        {%- endif -%}
+      </div>
       {%- endif -%}
       <div class="estoque-empty-inner" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">

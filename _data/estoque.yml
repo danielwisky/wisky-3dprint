@@ -21,6 +21,9 @@
 #   - preco:          apenas o número, em reais cheios (ex: preco: 265).
 #     Não escreva "R$" nem centavos — o site formata o "R$" sozinho.
 #     (Precisou de centavos/milhar? Me chame que ajusto a formatação.)
+#   - tamanho_cm:     (opcional) altura aproximada da peça, só o número
+#     (ex: tamanho_cm: 20). Vira um selo "20 cm" no card, ao lado da foto.
+#     Sem esse campo, a peça não mostra selo de tamanho.
 #   - Uma foto só:   use o campo  imagem: "/assets/img/estoque/arquivo.webp"
 #   - Várias fotos:  use o campo  imagens:  (lista) — vira um carrossel no card.
 #     A primeira da lista é a capa. Coloque os arquivos em /assets/img/estoque/.
@@ -29,6 +32,17 @@
 #   - Para deixar a vitrine vazia, deixe apenas:  pecas: []
 
 pecas:
+  - nome: "Haaland"
+    categorias: ["Personagens", "Futebol"]
+    pronta_entrega: true
+    imagens:
+      - "/assets/img/estoque/haaland-1.webp"
+      - "/assets/img/estoque/haaland-2.webp"
+      - "/assets/img/estoque/haaland-3.webp"
+    preco: 80
+    tamanho_cm: 20
+    descricao: "O atacante mais carrancudo do futebol em versão caricata correndo pra frente. Cerca de 20 cm."
+
   - nome: "Pikachu Cosplay Angel (Stitch)"
     categorias: ["Personagens", "Pokémon"]
     pronta_entrega: true
@@ -37,6 +51,7 @@ pecas:
       - "/assets/img/estoque/pikachu-stitch-2.webp"
       - "/assets/img/estoque/pikachu-stitch-3.webp"
     preco: 95
+    tamanho_cm: 20
     descricao: "O Pikachu mais fofo vestido de Angel, a Stitch rosa. Cerca de 20 cm, com textura de tricô caprichada e detalhes pintados à mão."
 
   - nome: "Taz Peaky Blinders"
@@ -47,6 +62,7 @@ pecas:
       - "/assets/img/estoque/taz-2.webp"
       - "/assets/img/estoque/taz-1.webp"
     preco: 265
+    tamanho_cm: 33
     descricao: "O redemoinho mais selvagem do Looney Tunes na pele dos Peaky Blinders. Cerca de 33 cm, com acabamento caprichado."
 
   - nome: "Yosemite Sam Peaky Blinders"
@@ -57,6 +73,7 @@ pecas:
       - "/assets/img/estoque/sam-2.webp"
       - "/assets/img/estoque/sam-1.webp"
     preco: 165
+    tamanho_cm: 27
     descricao: "O bigodudo mais invocado do Looney Tunes em versão gangster de Birmingham. Cerca de 27 cm."
 
   - nome: "Coringa (Joker)"
@@ -68,6 +85,7 @@ pecas:
       - "/assets/img/estoque/joker-4.webp"
       - "/assets/img/estoque/joker-2.webp"
     preco: 265
+    tamanho_cm: 27
     descricao: "O Príncipe Palhaço do Crime sobre o baú temático, que também é porta-objetos. Cerca de 27 cm."
 
   - nome: "Scorpion (Mortal Kombat)"
@@ -75,6 +93,7 @@ pecas:
     pronta_entrega: true
     imagem: "/assets/img/estoque/scorpion.webp"
     preco: 160
+    tamanho_cm: 30
     descricao: "Get over here! O ninja mais icônico dos games de luta. Cerca de 30 cm."
 
   - nome: "R2-D2 (Star Wars)"
@@ -82,6 +101,7 @@ pecas:
     pronta_entrega: true
     imagem: "/assets/img/estoque/r2d2.webp"
     preco: 290
+    tamanho_cm: 30
     descricao: "O droide mais corajoso da galáxia, cheio de detalhes. Cerca de 30 cm."
 
   - nome: "Sabre de Luz do Obi-Wan"
@@ -89,6 +109,7 @@ pecas:
     pronta_entrega: true
     imagem: "/assets/img/estoque/sabre-obi-wan.webp"
     preco: 85
+    tamanho_cm: 28
     descricao: "Réplica decorativa do sabre do mestre Jedi. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Sabre de Luz do Darth Vader"
@@ -96,6 +117,7 @@ pecas:
     pronta_entrega: true
     imagem: "/assets/img/estoque/sabre-darth-vader.webp"
     preco: 85
+    tamanho_cm: 28
     descricao: "Réplica do icônico sabre vermelho do Lorde Sith. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Sabre de Luz do Luke Skywalker"
@@ -103,6 +125,7 @@ pecas:
     pronta_entrega: true
     imagem: "/assets/img/estoque/sabre-luke.webp"
     preco: 85
+    tamanho_cm: 28
     descricao: "Réplica decorativa do sabre do jovem Jedi. Cerca de 28 cm. Base para expor opcional: +R$ 35."
 
   - nome: "Base para Sabre de Luz"
