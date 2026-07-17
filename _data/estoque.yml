@@ -16,11 +16,20 @@
 #     Use "categoria" (uma) OU "categorias" (várias); se usar as duas,
 #     "categorias" tem prioridade.
 #   - pronta_entrega: (opcional) true se a peça já está impressa e pronta
-#     pra envio imediato. A peça ganha um selo "Pronta entrega" no card.
+#     pra envio imediato. A peça ganha um selo "Pronta entrega" no card e
+#     um chip de filtro "Pronta entrega" aparece no topo da vitrine.
 #     Sem esse campo (ou com false), a peça é tratada como sob encomenda.
+#   - oferta:         (opcional) true se a peça está com desconto. Mostra o
+#     preço antigo riscado, um selo "-X%" no card e um chip de filtro
+#     "Oferta" no topo da vitrine. Sem esse campo (ou com false), a peça
+#     fica pelo preço cheio.
+#   - desconto_pct:   (opcional, só usado com "oferta: true") percentual de
+#     desconto, só o número (ex: desconto_pct: 30 = 30% off). Cada peça pode
+#     ter um valor diferente. Sem esse campo, o desconto padrão é 20%.
 #   - preco:          apenas o número, em reais cheios (ex: preco: 265).
 #     Não escreva "R$" nem centavos — o site formata o "R$" sozinho.
 #     (Precisou de centavos/milhar? Me chame que ajusto a formatação.)
+#     Com "oferta: true", esse é o preço ANTES do desconto.
 #   - tamanho_cm:     (opcional) altura aproximada da peça, só o número
 #     (ex: tamanho_cm: 20). Vira um selo "20 cm" no card, ao lado da foto.
 #     Sem esse campo, a peça não mostra selo de tamanho.
@@ -35,6 +44,7 @@ pecas:
   - nome: "Goku"
     categorias: ["Personagens", "Dragon Ball"]
     pronta_entrega: true
+    oferta: true
     imagens:
       - "/assets/img/estoque/goku-3.webp"
       - "/assets/img/estoque/goku-1.webp"
@@ -46,6 +56,7 @@ pecas:
   - nome: "Haaland"
     categorias: ["Personagens", "Futebol"]
     pronta_entrega: true
+    oferta: true
     imagens:
       - "/assets/img/estoque/haaland-1.webp"
       - "/assets/img/estoque/haaland-2.webp"
@@ -57,6 +68,7 @@ pecas:
   - nome: "Pikachu Cosplay Angel (Stitch)"
     categorias: ["Personagens", "Pokémon"]
     pronta_entrega: true
+    oferta: true
     imagens:
       - "/assets/img/estoque/pikachu-stitch-1.webp"
       - "/assets/img/estoque/pikachu-stitch-2.webp"
@@ -68,6 +80,7 @@ pecas:
   - nome: "Taz Peaky Blinders"
     categorias: ["Personagens", "Urban Vibes", "Looney Tunes"]
     pronta_entrega: true
+    oferta: true
     imagens:
       - "/assets/img/estoque/taz-3.webp"
       - "/assets/img/estoque/taz-2.webp"
@@ -79,6 +92,7 @@ pecas:
   - nome: "Yosemite Sam Peaky Blinders"
     categorias: ["Personagens", "Urban Vibes", "Looney Tunes"]
     pronta_entrega: true
+    oferta: true
     imagens:
       - "/assets/img/estoque/sam-3.webp"
       - "/assets/img/estoque/sam-2.webp"
@@ -90,6 +104,7 @@ pecas:
   - nome: "Coringa (Joker)"
     categorias: ["Personagens", "Urban Vibes", "DC"]
     pronta_entrega: true
+    oferta: true
     imagens:
       - "/assets/img/estoque/joker-1.webp"
       - "/assets/img/estoque/joker-3.webp"
@@ -102,6 +117,7 @@ pecas:
   - nome: "Scorpion (Mortal Kombat)"
     categorias: ["Personagens", "Mortal Kombat"]
     pronta_entrega: true
+    oferta: true
     imagem: "/assets/img/estoque/scorpion.webp"
     preco: 160
     tamanho_cm: 30
@@ -110,6 +126,7 @@ pecas:
   - nome: "R2-D2 (Star Wars)"
     categorias: ["Personagens", "Star Wars"]
     pronta_entrega: true
+    oferta: true
     imagem: "/assets/img/estoque/r2d2.webp"
     preco: 290
     tamanho_cm: 30
@@ -118,6 +135,7 @@ pecas:
   - nome: "Sabre de Luz do Obi-Wan"
     categorias: ["Star Wars", "Sabres de Luz"]
     pronta_entrega: true
+    oferta: true
     imagem: "/assets/img/estoque/sabre-obi-wan.webp"
     preco: 85
     tamanho_cm: 28
@@ -126,6 +144,7 @@ pecas:
   - nome: "Sabre de Luz do Darth Vader"
     categorias: ["Star Wars", "Sabres de Luz"]
     pronta_entrega: true
+    oferta: true
     imagem: "/assets/img/estoque/sabre-darth-vader.webp"
     preco: 85
     tamanho_cm: 28
@@ -134,6 +153,7 @@ pecas:
   - nome: "Sabre de Luz do Luke Skywalker"
     categorias: ["Star Wars", "Sabres de Luz"]
     pronta_entrega: true
+    oferta: true
     imagem: "/assets/img/estoque/sabre-luke.webp"
     preco: 85
     tamanho_cm: 28
@@ -142,6 +162,7 @@ pecas:
   - nome: "Base para Sabre de Luz"
     categorias: ["Acessórios", "Sabres de Luz"]
     pronta_entrega: true
+    oferta: true
     imagem: "/assets/img/estoque/base-sabre.webp"
     preco: 35
     descricao: "Suporte para expor seu sabre com estilo. Combina com qualquer sabre acima."

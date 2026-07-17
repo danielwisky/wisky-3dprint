@@ -1106,6 +1106,15 @@ code {
   }
 }
 
+// "Pronta entrega" e "Oferta": chips fixos, com contorno para se destacar das categorias.
+.estoque-chip--special {
+  border-color: color-mix(in srgb, var(--coral) 40%, var(--border));
+
+  &.is-active {
+    background: var(--coral);
+  }
+}
+
 // Número entre parênteses com a contagem contextual de peças no chip.
 // Os parênteses só aparecem quando o JS preencheu o número (:not(:empty)),
 // evitando um "()" solto antes do script rodar ou com JS desativado.
@@ -1320,6 +1329,11 @@ code {
   background: rgba(255, 255, 255, 0.9);
 }
 
+.estoque-badge--oferta {
+  color: #fff;
+  background: var(--coral);
+}
+
 .estoque-card:hover .estoque-slide.is-active .estoque-card-image {
   transform: scale(1.03);
 }
@@ -1483,6 +1497,24 @@ code {
   font-weight: 700;
   font-size: 1.35rem;
   color: var(--text);
+}
+
+.estoque-card-price--oferta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.estoque-card-price-old {
+  font-family: $font-body;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.estoque-card-price-new {
+  color: var(--coral);
 }
 
 .estoque-card-btn {
