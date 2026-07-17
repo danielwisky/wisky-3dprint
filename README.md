@@ -59,6 +59,16 @@ tem instruções de uso (categoria, preço, fotos, selo de "Pronta entrega" etc.
 em comentários no topo. As fotos ficam em `assets/img/estoque/` e podem ser
 convertidas para `.webp` com `cwebp -q 85 origem.jpg -o destino.webp`.
 
+## SEO / Analytics
+
+- `google_analytics` em `_config.yml` tem o Measurement ID do GA4 (mesma
+  property usada em danielwisky.github.io). Deixe em branco (`""`) pra
+  desativar.
+- Dados estruturados (JSON-LD) ficam em `_includes/structured-data.html`:
+  perfil do negócio, FAQ e a lista de produtos da loja (com preço já com
+  desconto de oferta aplicado).
+- `404.html` é a página de erro customizada.
+
 ## Deploy
 
 Push na `main` → GitHub Actions publica no Pages. Repositório precisa ser **público** (plano free).

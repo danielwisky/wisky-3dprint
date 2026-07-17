@@ -4,6 +4,7 @@ baseurl: ""
 url: "https://wisky3dprint.com.br"
 lang: pt-BR
 image: "/assets/img/og-image.jpg"
+google_analytics: "G-R9ZHFE3RQ5"   # mesma property GA4 usada em danielwisky.github.io (dois domínios, mesma conta)
 
 instagram:
   username: "wisky.3dprint"

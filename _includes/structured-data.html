@@ -38,6 +38,14 @@
     {%- for peca in site.data.estoque.pecas %}
     {%- assign fotos = peca.imagens -%}
     {%- if fotos == nil and peca.imagem and peca.imagem != "" -%}{%- assign fotos = peca.imagem | split: "§" -%}{%- endif -%}
+    {%- assign categoria_principal = peca.categorias[0] | default: peca.categoria -%}
+    {%- if peca.oferta -%}
+      {%- assign desconto_pct = peca.desconto_pct | default: 20 -%}
+      {%- assign valor_desconto = peca.preco | times: desconto_pct | divided_by: 100.0 -%}
+      {%- assign preco_final = peca.preco | minus: valor_desconto | round -%}
+    {%- else -%}
+      {%- assign preco_final = peca.preco -%}
+    {%- endif -%}
     {
       "@type": "ListItem",
       "position": {{ forloop.index }},
@@ -46,8 +54,8 @@
         "name": {{ peca.nome | jsonify }},
         "sku": {{ peca.nome | slugify | prepend: "w3d-" | jsonify }},
         "brand": { "@type": "Brand", "name": "Wisky 3D" },
-        {%- if peca.categoria and peca.categoria != "" %}
-        "category": {{ peca.categoria | jsonify }},
+        {%- if categoria_principal and categoria_principal != "" %}
+        "category": {{ categoria_principal | jsonify }},
         {%- endif %}
         {%- if peca.descricao and peca.descricao != "" %}
         "description": {{ peca.descricao | jsonify }},
@@ -57,7 +65,7 @@
         {%- endif %}
         "offers": {
           "@type": "Offer",
-          "price": {{ peca.preco | jsonify }},
+          "price": {{ preco_final | jsonify }},
           "priceCurrency": "BRL",
           "availability": {% if peca.pronta_entrega %}"https://schema.org/InStock"{% else %}"https://schema.org/PreOrder"{% endif %},
           "url": {{ "/loja/" | absolute_url | jsonify }},
