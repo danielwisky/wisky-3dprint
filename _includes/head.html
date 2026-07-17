@@ -24,10 +24,14 @@
   {% include structured-data.html %}
   {% include google-analytics.html %}
 
+  {%- unless page.peca %}
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/jpeg">
+  {%- endunless %}
   <meta name="twitter:card" content="summary_large_image">
 
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/img/favicon.svg' | relative_url }}">
   <link rel="shortcut icon" type="image/x-icon" href="{{ '/assets/img/favicon.ico' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/img/apple-touch-icon.png' | relative_url }}">
 </head>

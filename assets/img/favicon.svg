@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5cc"/>
+      <stop offset="50%" stop-color="#8b7cf6"/>
+      <stop offset="100%" stop-color="#ff6b4a"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="142" fill="url(#accent)"/>
+
+  <text x="256" y="336" text-anchor="middle"
+        font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="800"
+        font-size="240" letter-spacing="-6" fill="#070b12">W3</text>
+</svg>
