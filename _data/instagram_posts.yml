@@ -1,4 +1,8 @@
 posts:
+  - id: "Da5V-vtxLXL"
+    type: "reel"
+    image: "/assets/img/gallery/Da5V-vtxLXL.webp"
+    caption: "🐉 GOKU EM IMPRESSÃO 3D! 💥✨"
   - id: "DayG-byRI_O"
     type: "reel"
     image: "/assets/img/gallery/DayG-byRI_O.webp"
@@ -90,7 +94,3 @@ posts:
     type: "p"
     image: "/assets/img/gallery/DXmQqojkeOS.webp"
     caption: "⚡️ PIKACHU COSPLAY STITCH EM IMPRESSÃO 3D! 🐭💙"
-  - id: "DXdNWnVEUS-"
-    type: "p"
-    image: "/assets/img/gallery/DXdNWnVEUS-.webp"
-    caption: "🤠 WOODY DO TOY STORY EM IMPRESSÃO 3D! 🚀⭐"

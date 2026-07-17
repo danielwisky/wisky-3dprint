@@ -1,6 +1,6 @@
 # Wisky 3D Print
 
-Landing page de impressão 3D sob encomenda — [3dprint.danielwisky.com.br](https://3dprint.danielwisky.com.br)
+Landing page de impressão 3D sob encomenda — [wisky3dprint.com.br](https://wisky3dprint.com.br)
 
 Stack: Jekyll · deploy automático via GitHub Actions · galeria sincronizada com [@wisky.3dprint](https://www.instagram.com/wisky.3dprint)
 
@@ -50,6 +50,14 @@ gallery:
 
 > O endpoint do Instagram é não-oficial e pode mudar; se a paginação falhar, o
 > script mantém o que conseguiu (~primeira página) sem quebrar.
+
+## Loja
+
+A vitrine em `/loja` lista as peças cadastradas em `_data/estoque.yml`. Para
+adicionar, editar ou remover uma peça, edite esse arquivo — o próprio arquivo
+tem instruções de uso (categoria, preço, fotos, selo de "Pronta entrega" etc.)
+em comentários no topo. As fotos ficam em `assets/img/estoque/` e podem ser
+convertidas para `.webp` com `cwebp -q 85 origem.jpg -o destino.webp`.
 
 ## Deploy
 

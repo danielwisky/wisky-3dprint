@@ -32,6 +32,17 @@
 #   - Para deixar a vitrine vazia, deixe apenas:  pecas: []
 
 pecas:
+  - nome: "Goku"
+    categorias: ["Personagens", "Dragon Ball"]
+    pronta_entrega: true
+    imagens:
+      - "/assets/img/estoque/goku-3.webp"
+      - "/assets/img/estoque/goku-1.webp"
+      - "/assets/img/estoque/goku-2.webp"
+    preco: 110
+    tamanho_cm: 32
+    descricao: "O guerreiro Saiyajin mais famoso do anime em pose de luta. Cerca de 32 cm."
+
   - nome: "Haaland"
     categorias: ["Personagens", "Futebol"]
     pronta_entrega: true
