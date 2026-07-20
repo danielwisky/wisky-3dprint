@@ -11,6 +11,8 @@ USO RECOMENDADO (cria venv + instala Pillow automaticamente):
 
 import json
 import os
+import time
+import urllib.error
 import urllib.request
 
 USERNAME = "wisky.3dprint"
@@ -37,11 +39,34 @@ OG_HANDLE = "@wisky.3dprint"
 
 MIN_VALID_BYTES = 5_000  # imagens do IG não vêm menor que isso
 
+RETRY_WAITS_SECONDS = [10, 30, 60]  # backoff só pro 429 (rate limit), que é transitório
+
+
+class InstagramUnavailable(Exception):
+    """O IG recusou o pedido de um jeito que retry não resolve (ex.: bug de schema deles)."""
+
 
 def _get_json(url):
     req = urllib.request.Request(url, headers={"User-Agent": IG_UA, "X-IG-App-ID": IG_APP_ID})
-    with urllib.request.urlopen(req) as response:
-        return json.load(response)
+    last_error = None
+    for attempt, wait in enumerate([0] + RETRY_WAITS_SECONDS):
+        if wait:
+            print(f"Rate limit do Instagram (429) — esperando {wait}s antes de tentar de novo...")
+            time.sleep(wait)
+        try:
+            with urllib.request.urlopen(req) as response:
+                return json.load(response)
+        except urllib.error.HTTPError as exc:
+            body = exc.read().decode("utf-8", errors="replace")
+            if exc.code == 429:
+                last_error = InstagramUnavailable(
+                    f"Instagram bloqueou por rate limit (429) mesmo após retries: {body}"
+                )
+                continue
+            raise InstagramUnavailable(
+                f"Instagram recusou o pedido (HTTP {exc.code}): {body}"
+            ) from exc
+    raise last_error
 
 
 def _user_id():
@@ -164,7 +189,13 @@ def main():
 
     os.makedirs(GALLERY_DIR, exist_ok=True)
 
-    posts = collect_posts()
+    try:
+        posts = collect_posts()
+    except InstagramUnavailable as exc:
+        raise SystemExit(
+            f"Não deu pra falar com o Instagram agora ({exc}). "
+            "A galeria atual foi mantida sem alterações — tente rodar de novo mais tarde."
+        )
     lines = ["posts:"]
     image_paths = []
     warnings = []
