@@ -5,11 +5,13 @@
       <stop offset="50%" stop-color="#8b7cf6"/>
       <stop offset="100%" stop-color="#ff6b4a"/>
     </linearGradient>
+    <mask id="cutout">
+      <rect width="512" height="512" rx="142" fill="#fff"/>
+      <text x="256" y="336" text-anchor="middle"
+            font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="800"
+            font-size="240" letter-spacing="-6" fill="#000">W3</text>
+    </mask>
   </defs>
 
-  <rect width="512" height="512" rx="142" fill="url(#accent)"/>
-
-  <text x="256" y="336" text-anchor="middle"
-        font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="800"
-        font-size="240" letter-spacing="-6" fill="#070b12">W3</text>
+  <rect width="512" height="512" rx="142" fill="url(#accent)" mask="url(#cutout)"/>
 </svg>
