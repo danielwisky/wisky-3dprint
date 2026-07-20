@@ -258,16 +258,10 @@ code {
 }
 
 .site-logo-mark {
-  display: grid;
-  place-items: center;
+  display: block;
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 10px;
-  background: var(--gradient);
-  color: var(--on-accent);
-  font-family: $font-display;
-  font-size: 0.75rem;
-  font-weight: 800;
+  object-fit: contain;
 }
 
 .site-logo-text {
