@@ -12,3 +12,8 @@ __pycache__/
 .venv/
 venv/
 env/
+
+# Credenciais do Instagram (scripts/update-gallery.py) — nunca versionar
+scripts/.ig_session
+scripts/.ig_token
+scripts/.ig_app_secret

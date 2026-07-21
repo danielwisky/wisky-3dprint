@@ -5,6 +5,11 @@ Cada foto é salva como 2 WebP: {code}.webp (full, usado no lightbox) e
 {code}-thumb.webp (menor, usado na grade). Também gera og-image.jpg 1200x630
 para preview ao compartilhar o link. Requer Pillow (o wrapper .sh instala).
 
+Usa a Instagram Graph API oficial (API setup with Instagram login). Precisa
+de um access token válido salvo em scripts/.ig_token (um token por linha,
+sem quebra de linha extra; arquivo fora do git via .gitignore). Gere/renove
+o token pelo App do Meta for Developers (produto Instagram).
+
 USO RECOMENDADO (cria venv + instala Pillow automaticamente):
     ./scripts/update-gallery.sh
 """
@@ -15,15 +20,17 @@ import time
 import urllib.error
 import urllib.request
 
-USERNAME = "wisky.3dprint"
 MAX_POSTS = 24
 GALLERY_DIR = "assets/img/gallery"
 DATA_FILE = "_data/instagram_posts.yml"
+TOKEN_FILE = "scripts/.ig_token"
 
-IG_APP_ID = "936619743392459"
-IG_UA = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15"
-PAGE_SIZE = 12          # o IG entrega ~12 itens por página, independente do count
-TARGET_IMAGE_WIDTH = 1080  # qualidade alvo ao escolher entre os candidates
+GRAPH_API_BASE = "https://graph.instagram.com"
+MEDIA_FIELDS = (
+    "id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,"
+    "children{media_url,media_type,thumbnail_url}"
+)
+PAGE_SIZE = 25
 
 # Cada foto vira 2 WebP: full (lightbox) + thumb (grade). Consistente com estoque/.
 FULL_WIDTH = 1080
@@ -43,18 +50,29 @@ RETRY_WAITS_SECONDS = [10, 30, 60]  # backoff só pro 429 (rate limit), que é t
 
 
 class InstagramUnavailable(Exception):
-    """O IG recusou o pedido de um jeito que retry não resolve (ex.: bug de schema deles)."""
+    """O IG recusou o pedido de um jeito que retry não resolve (ex.: token expirado)."""
+
+
+def _load_token():
+    if not os.path.exists(TOKEN_FILE):
+        raise InstagramUnavailable(
+            f"Token de acesso não encontrado em {TOKEN_FILE}. Gere um token (Meta for "
+            "Developers → app → Instagram) e salve o valor nesse arquivo."
+        )
+    token = open(TOKEN_FILE, encoding="utf-8").read().strip()
+    if not token:
+        raise InstagramUnavailable(f"Arquivo {TOKEN_FILE} está vazio.")
+    return token
 
 
 def _get_json(url):
-    req = urllib.request.Request(url, headers={"User-Agent": IG_UA, "X-IG-App-ID": IG_APP_ID})
     last_error = None
-    for attempt, wait in enumerate([0] + RETRY_WAITS_SECONDS):
+    for wait in [0] + RETRY_WAITS_SECONDS:
         if wait:
             print(f"Rate limit do Instagram (429) — esperando {wait}s antes de tentar de novo...")
             time.sleep(wait)
         try:
-            with urllib.request.urlopen(req) as response:
+            with urllib.request.urlopen(url) as response:
                 return json.load(response)
         except urllib.error.HTTPError as exc:
             body = exc.read().decode("utf-8", errors="replace")
@@ -64,66 +82,61 @@ def _get_json(url):
                 )
                 continue
             raise InstagramUnavailable(
-                f"Instagram recusou o pedido (HTTP {exc.code}): {body}"
+                f"Instagram recusou o pedido (HTTP {exc.code}): {body}. "
+                f"Se o token expirou, gere um novo e atualize {TOKEN_FILE}."
             ) from exc
     raise last_error
 
 
-def _user_id():
-    data = _get_json(
-        f"https://www.instagram.com/api/v1/users/web_profile_info/?username={USERNAME}"
-    )
-    return data["data"]["user"]["id"]
+def _pick_media_url(node):
+    """Escolhe a imagem de capa do post: thumbnail pra vídeo/reel, 1º item pra carrossel."""
+    media_type = node.get("media_type")
+    if media_type == "VIDEO":
+        return node.get("thumbnail_url") or node.get("media_url")
+    if media_type == "CAROUSEL_ALBUM":
+        children = (node.get("children") or {}).get("data", [])
+        if not children:
+            return None
+        first = children[0]
+        if first.get("media_type") == "VIDEO":
+            return first.get("thumbnail_url") or first.get("media_url")
+        return first.get("media_url")
+    return node.get("media_url")
 
 
-def _pick_image_url(item):
-    """Escolhe, entre os candidates, a imagem mais próxima de TARGET_IMAGE_WIDTH."""
-    candidates = item.get("image_versions2", {}).get("candidates", [])
-    if not candidates:
-        return None
-    return min(
-        candidates,
-        key=lambda c: abs(c.get("width", 0) - TARGET_IMAGE_WIDTH),
-    )["url"]
+def _code_from_permalink(permalink):
+    """Extrai o shortcode do permalink (.../reel/CODE/ ou .../p/CODE/)."""
+    parts = [p for p in (permalink or "").split("/") if p]
+    return parts[-1] if parts else None
 
 
 def collect_posts():
-    """Reúne até MAX_POSTS posts via endpoint feed/user, paginando por max_id.
+    """Reúne até MAX_POSTS posts via Instagram Graph API, paginando por 'paging.next'.
 
-    Retorna uma lista normalizada de dicts {code, type, image_url}. Se a
+    Retorna uma lista normalizada de dicts {code, type, image_url, caption}. Se a
     paginação falhar no meio, retorna o que já foi coletado (sem quebrar)."""
-    user_id = _user_id()
+    token = _load_token()
+    url = f"{GRAPH_API_BASE}/me/media?fields={MEDIA_FIELDS}&limit={PAGE_SIZE}&access_token={token}"
     posts = []
-    max_id = None
 
-    while len(posts) < MAX_POSTS:
-        url = f"https://www.instagram.com/api/v1/feed/user/{user_id}/?count={PAGE_SIZE}"
-        if max_id:
-            url += f"&max_id={max_id}"
+    while url and len(posts) < MAX_POSTS:
         try:
             data = _get_json(url)
         except Exception as exc:
             print(f"Paginação interrompida (mantendo {len(posts)} posts): {exc}")
             break
 
-        items = data.get("items", [])
-        if not items:
-            break
-
-        for item in items:
-            code = item.get("code")
-            image_url = _pick_image_url(item)
+        for node in data.get("data", []):
+            code = _code_from_permalink(node.get("permalink"))
+            image_url = _pick_media_url(node)
             if not code or not image_url:
                 continue
-            post_type = "reel" if item.get("product_type") == "clips" else "p"
-            caption_obj = item.get("caption") or {}
+            post_type = "reel" if node.get("media_type") == "VIDEO" else "p"
             # Só o título: primeira linha da legenda (o restante é a descrição do post).
-            caption = (caption_obj.get("text") or "").split("\n")[0].strip()
+            caption = (node.get("caption") or "").split("\n")[0].strip()
             posts.append({"code": code, "type": post_type, "image_url": image_url, "caption": caption})
 
-        if not data.get("more_available") or not data.get("next_max_id"):
-            break
-        max_id = data["next_max_id"]
+        url = (data.get("paging") or {}).get("next")
 
     return posts[:MAX_POSTS]
 
