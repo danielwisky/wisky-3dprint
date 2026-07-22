@@ -181,6 +181,19 @@ title: "Wisky 3D Print"
 </section>
 {%- endif -%}
 
+{%- if site.data.parceiros and site.data.parceiros.size > 0 -%}
+<section id="parceiros" class="section section-parceiros">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Parceiros</span>
+      <h2>Quem também recomendamos</h2>
+      <p>Marcas parceiras que ajudam a completar sua experiência.</p>
+    </header>
+    {% include parceiros.html %}
+  </div>
+</section>
+{%- endif -%}
+
 <section id="contato" class="section section-cta">
   <div class="container">
     <div class="cta-panel reveal">
