@@ -44,6 +44,8 @@ pecas:
   - nome: "Blastoise Street Style"
     categorias: ["Personagens", "Pokémon"]
     pronta_entrega: true
+    oferta: true
+    desconto_pct: 15
     imagens:
       - "/assets/img/estoque/blastoise-1.webp"
       - "/assets/img/estoque/blastoise-2.webp"
@@ -55,7 +57,6 @@ pecas:
   - nome: "Goku"
     categorias: ["Personagens", "Dragon Ball"]
     pronta_entrega: true
-    oferta: true
     imagens:
       - "/assets/img/estoque/goku-3.webp"
       - "/assets/img/estoque/goku-1.webp"
@@ -67,7 +68,6 @@ pecas:
   - nome: "Haaland"
     categorias: ["Personagens", "Futebol"]
     pronta_entrega: true
-    oferta: true
     imagens:
       - "/assets/img/estoque/haaland-1.webp"
       - "/assets/img/estoque/haaland-2.webp"
@@ -79,7 +79,6 @@ pecas:
   - nome: "Pikachu Cosplay Angel (Stitch)"
     categorias: ["Personagens", "Pokémon"]
     pronta_entrega: true
-    oferta: true
     imagens:
       - "/assets/img/estoque/pikachu-stitch-1.webp"
       - "/assets/img/estoque/pikachu-stitch-2.webp"
@@ -92,6 +91,7 @@ pecas:
     categorias: ["Personagens", "Urban Vibes", "Looney Tunes"]
     pronta_entrega: true
     oferta: true
+    desconto_pct: 15
     imagens:
       - "/assets/img/estoque/taz-3.webp"
       - "/assets/img/estoque/taz-2.webp"
@@ -104,6 +104,7 @@ pecas:
     categorias: ["Personagens", "Urban Vibes", "Looney Tunes"]
     pronta_entrega: true
     oferta: true
+    desconto_pct: 15
     imagens:
       - "/assets/img/estoque/sam-3.webp"
       - "/assets/img/estoque/sam-2.webp"
@@ -115,7 +116,6 @@ pecas:
   - nome: "Coringa (Joker)"
     categorias: ["Personagens", "Urban Vibes", "DC"]
     pronta_entrega: true
-    oferta: true
     imagens:
       - "/assets/img/estoque/joker-1.webp"
       - "/assets/img/estoque/joker-3.webp"
@@ -128,7 +128,6 @@ pecas:
   - nome: "Scorpion (Mortal Kombat)"
     categorias: ["Personagens", "Mortal Kombat"]
     pronta_entrega: true
-    oferta: true
     imagem: "/assets/img/estoque/scorpion.webp"
     preco: 160
     tamanho_cm: 30
@@ -138,6 +137,7 @@ pecas:
     categorias: ["Personagens", "Star Wars"]
     pronta_entrega: true
     oferta: true
+    desconto_pct: 15
     imagem: "/assets/img/estoque/r2d2.webp"
     preco: 290
     tamanho_cm: 30
@@ -146,7 +146,6 @@ pecas:
   - nome: "Sabre de Luz do Obi-Wan"
     categorias: ["Star Wars", "Sabres de Luz"]
     pronta_entrega: true
-    oferta: true
     imagem: "/assets/img/estoque/sabre-obi-wan.webp"
     preco: 85
     tamanho_cm: 28
@@ -155,7 +154,6 @@ pecas:
   - nome: "Sabre de Luz do Darth Vader"
     categorias: ["Star Wars", "Sabres de Luz"]
     pronta_entrega: true
-    oferta: true
     imagem: "/assets/img/estoque/sabre-darth-vader.webp"
     preco: 85
     tamanho_cm: 28
@@ -164,7 +162,6 @@ pecas:
   - nome: "Sabre de Luz do Luke Skywalker"
     categorias: ["Star Wars", "Sabres de Luz"]
     pronta_entrega: true
-    oferta: true
     imagem: "/assets/img/estoque/sabre-luke.webp"
     preco: 85
     tamanho_cm: 28
@@ -173,7 +170,6 @@ pecas:
   - nome: "Base para Sabre de Luz"
     categorias: ["Acessórios", "Sabres de Luz"]
     pronta_entrega: true
-    oferta: true
     imagem: "/assets/img/estoque/base-sabre.webp"
     preco: 35
     descricao: "Suporte para expor seu sabre com estilo. Combina com qualquer sabre acima."
