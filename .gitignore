@@ -1,0 +1,19 @@
+_site
+.sass-cache
+.jekyll-cache
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.Python
+.venv/
+venv/
+env/
+
+# Credenciais do Instagram (scripts/update-gallery.py) — nunca versionar
+scripts/.ig_session
+scripts/.ig_token
+scripts/.ig_app_secret

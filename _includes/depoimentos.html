@@ -1,0 +1,8 @@
+<div class="depoimentos-grid reveal-stagger">
+  {%- for item in site.data.depoimentos -%}
+  <figure class="depoimento-card">
+    <blockquote>{{ item.texto }}</blockquote>
+    <figcaption>{{ item.nome }}</figcaption>
+  </figure>
+  {%- endfor -%}
+</div>

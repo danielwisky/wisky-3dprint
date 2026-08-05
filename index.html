@@ -1,0 +1,215 @@
+---
+layout: home
+title: "Wisky 3D Print"
+---
+
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-grid"></div>
+    <div class="hero-glow hero-glow-a"></div>
+    <div class="hero-glow hero-glow-b"></div>
+    <div class="hero-layers">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="container hero-content reveal-stagger">
+    <p class="hero-eyebrow">Impressão 3D · Sob encomenda</p>
+    <h1 class="hero-title">
+      Transforme <em>modelos digitais</em> em objetos reais
+    </h1>
+    <p class="hero-lead">
+      Encontrou algo no MakerWorld? Imprimimos com qualidade, acabamento cuidadoso
+      e combinamos a entrega pelo Instagram.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-gradient" href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">
+        Explorar MakerWorld
+      </a>
+      <a class="btn btn-ghost" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+        Pedir orçamento
+      </a>
+    </div>
+    <dl class="hero-stats">
+      <div>
+        <dt>Modelos</dt>
+        <dd>Qualquer modelo do MakerWorld</dd>
+      </div>
+      <div>
+        <dt>Personalização</dt>
+        <dd>Cor, tamanho e quantidade</dd>
+      </div>
+      <div>
+        <dt>Contato</dt>
+        <dd>
+          <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+            @{{ site.instagram.username }}
+          </a>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<section id="como-funciona" class="section section-steps">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Como funciona?</span>
+      <h2>Da escolha à entrega em 4 passos</h2>
+      <p>Sem formulário, sem burocracia. Você envia o link e cuidamos do resto.</p>
+    </header>
+
+    <ol class="steps-pipeline reveal-stagger">
+      <li class="step-pipeline-item">
+        <div class="step-marker" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+          </svg>
+        </div>
+        <div class="step-content">
+          <span class="step-label">Passo 01</span>
+          <h3>Escolha o modelo</h3>
+          <p>Explore o <a href="{{ site.makerworld_url }}" target="_blank" rel="noopener noreferrer">MakerWorld</a> e salve a peça que quer imprimir.</p>
+        </div>
+      </li>
+      <li class="step-pipeline-item">
+        <div class="step-marker" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        <div class="step-content">
+          <span class="step-label">Passo 02</span>
+          <h3>Copie o link</h3>
+          <p>Abra a página do modelo e copie o endereço (URL) completo da barra do navegador.</p>
+        </div>
+      </li>
+      <li class="step-pipeline-item">
+        <div class="step-marker" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z"/>
+          </svg>
+        </div>
+        <div class="step-content">
+          <span class="step-label">Passo 03</span>
+          <h3>Envie no Instagram</h3>
+          <p>Envie o link para <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer"><strong>@{{ site.instagram.username }}</strong></a> informando cor, tamanho e quantidade.</p>
+        </div>
+      </li>
+      <li class="step-pipeline-item">
+        <div class="step-marker step-marker-finish" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+            <path d="M3.3 7.7L12 12.5l8.7-4.8M12 22V12.5"/>
+          </svg>
+        </div>
+        <div class="step-content">
+          <span class="step-label">Passo 04</span>
+          <h3>Orçamento e impressão</h3>
+          <p>Retornamos com orçamento, prazo e entrega. Após sua aprovação, a peça vai para a impressora.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section id="estimativa" class="section section-calc">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Estimativa</span>
+      <h2>Calcule o preço aproximado</h2>
+      <p>Informe o peso e o tempo de impressão do modelo para uma estimativa rápida. Você encontra esses dados na própria página do modelo no MakerWorld.</p>
+    </header>
+    {% include price-calculator.html %}
+  </div>
+</section>
+
+<section id="galeria" class="section section-gallery">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Portfólio</span>
+      <h2>Trabalhos recentes</h2>
+      <p>Peças e projetos publicados no nosso Instagram.</p>
+    </header>
+
+    {% include instagram-feed.html %}
+
+    <p class="gallery-more">
+      <a href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+        Ver todos em @{{ site.instagram.username }} →
+      </a>
+    </p>
+  </div>
+</section>
+
+<section id="loja" class="section section-estoque-teaser">
+  <div class="container">
+    <div class="estoque-teaser reveal">
+      <div class="estoque-teaser-content">
+        <span class="section-tag">Loja</span>
+        <h2>Dá uma olhada na loja</h2>
+        <p>Tem peça pronta para envio imediato e peça sob encomenda. Dá uma olhada no que está disponível agora.</p>
+      </div>
+      <a class="btn btn-gradient btn-lg" href="{{ '/loja/' | relative_url }}">
+        Ver loja →
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="section section-faq">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Dúvidas</span>
+      <h2>Perguntas frequentes</h2>
+      <p>As respostas rápidas antes de você fazer seu pedido.</p>
+    </header>
+    {% include faq.html %}
+  </div>
+</section>
+
+{%- if site.data.depoimentos and site.data.depoimentos.size > 0 -%}
+<section id="depoimentos" class="section section-depoimentos">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Depoimentos</span>
+      <h2>O que dizem os clientes</h2>
+    </header>
+    {% include depoimentos.html %}
+  </div>
+</section>
+{%- endif -%}
+
+{%- if site.data.parceiros and site.data.parceiros.size > 0 -%}
+<section id="parceiros" class="section section-parceiros">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Parceiros</span>
+      <h2>Quem também recomendamos</h2>
+      <p>Marcas parceiras que ajudam a completar sua experiência.</p>
+    </header>
+    {% include parceiros.html %}
+  </div>
+</section>
+{%- endif -%}
+
+<section id="contato" class="section section-cta">
+  <div class="container">
+    <div class="cta-panel reveal">
+      <div class="cta-panel-glow" aria-hidden="true"></div>
+      <div class="cta-panel-content">
+        <span class="section-tag">Orçamento</span>
+        <h2>Pronto para tirar sua ideia do papel?</h2>
+        <p>Envie o link do modelo no Instagram e receba seu orçamento personalizado.</p>
+        <a class="btn btn-gradient btn-lg" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+          Chamar @{{ site.instagram.username }}
+        </a>
+      </div>
+      <div class="cta-panel-visual" aria-hidden="true">
+        <div class="filament-ring"></div>
+        <div class="filament-core"></div>
+      </div>
+    </div>
+  </div>
+</section>

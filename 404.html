@@ -1,0 +1,23 @@
+---
+layout: default
+title: "Página não encontrada"
+description: "Essa página não existe. Volte para a loja ou fale com a Wisky 3D Print no Instagram."
+permalink: /404.html
+sitemap: false
+---
+
+<section class="section section-estoque">
+  <div class="container">
+    <header class="section-header section-header-center reveal">
+      <span class="section-tag">Erro 404</span>
+      <h1>Essa peça não foi impressa (ainda)</h1>
+      <p>A página que você procurava não existe ou foi movida. Que tal dar uma olhada na loja ou chamar no Instagram?</p>
+    </header>
+    <div class="hero-actions" style="justify-content: center;">
+      <a class="btn btn-gradient btn-lg" href="{{ '/loja/' | relative_url }}">Ver a loja</a>
+      <a class="btn btn-gradient btn-lg" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+        Chamar @{{ site.instagram.username }}
+      </a>
+    </div>
+  </div>
+</section>

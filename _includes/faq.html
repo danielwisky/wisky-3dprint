@@ -1,0 +1,13 @@
+<div class="faq-list reveal-stagger">
+  {%- for item in site.data.faq -%}
+  <details class="faq-item">
+    <summary>
+      <span>{{ item.pergunta }}</span>
+      <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M6 9l6 6 6-6"/>
+      </svg>
+    </summary>
+    <div class="faq-answer">{{ item.resposta | markdownify }}</div>
+  </details>
+  {%- endfor -%}
+</div>

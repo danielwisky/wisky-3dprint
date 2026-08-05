@@ -1,0 +1,43 @@
+title: "Wisky 3D Print"
+description: "Impressão 3D sob encomenda a partir de modelos do MakerWorld. Envie o link, combine cor e tamanho e receba sua peça com qualidade."
+baseurl: ""
+url: "https://wisky3dprint.com.br"
+lang: pt-BR
+image: "/assets/img/og-image.jpg"
+google_analytics: "G-R9ZHFE3RQ5"   # mesma property GA4 usada em danielwisky.github.io (dois domínios, mesma conta)
+
+instagram:
+  username: "wisky.3dprint"
+  profile_url: "https://www.instagram.com/wisky.3dprint"
+  max_posts: 24
+
+gallery:
+  initial: 12   # quantos posts aparecem antes de clicar em "Carregar mais"
+  batch: 8      # quantos posts cada clique revela
+
+makerworld_url: "https://makerworld.com/en"
+
+sass:
+  style: compressed
+
+markdown: kramdown
+kramdown:
+  input: GFM
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+calculadora:
+  custo_filamento_kg: 129
+  potencia_w: 80
+  tarifa_kwh: 0.80
+  desgaste: 2.00
+  margem_pct: 100
+  montagem: 20
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - scripts

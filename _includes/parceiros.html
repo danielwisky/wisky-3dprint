@@ -1,0 +1,22 @@
+<div class="parceiros-grid reveal-stagger">
+  {%- for p in site.data.parceiros -%}
+  <article class="parceiro-card">
+    <div class="parceiro-card-logo">
+      <img src="{{ p.logo | relative_url }}" alt="Logo {{ p.nome }}" loading="lazy" decoding="async">
+    </div>
+    <h3 class="parceiro-card-nome">{{ p.nome }}</h3>
+    <div class="parceiro-card-links">
+      {%- if p.instagram_url -%}
+      <a class="btn btn-ghost" href="{{ p.instagram_url }}" target="_blank" rel="noopener noreferrer">
+        @{{ p.instagram_username }}
+      </a>
+      {%- endif -%}
+      {%- if p.site_url -%}
+      <a class="btn btn-ghost" href="{{ p.site_url }}" target="_blank" rel="noopener noreferrer">
+        Visitar loja
+      </a>
+      {%- endif -%}
+    </div>
+  </article>
+  {%- endfor -%}
+</div>

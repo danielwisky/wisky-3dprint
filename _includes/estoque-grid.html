@@ -1,0 +1,228 @@
+{%- assign pecas = site.data.estoque.pecas -%}
+{%- if pecas and pecas.size > 0 -%}
+{%- comment -%} União de todas as categorias (aceita "categoria" única ou a lista "categorias"). Liquid não tem flatten, então junta num texto com "§" e desdobra. {%- endcomment -%}
+{%- assign _cats = "" -%}
+{%- for peca in pecas -%}
+  {%- if peca.categorias -%}
+    {%- for c in peca.categorias -%}{%- assign _cats = _cats | append: c | append: "§" -%}{%- endfor -%}
+  {%- elsif peca.categoria and peca.categoria != "" -%}
+    {%- assign _cats = _cats | append: peca.categoria | append: "§" -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- comment -%} Chips em ordem alfabética. Os selos no card seguem outra ordem (por tamanho, via JS). {%- endcomment -%}
+{%- assign categorias = _cats | split: "§" | uniq | sort_natural -%}
+{%- comment -%} "Pronta entrega" e "Oferta" viram chips fixos no topo, antes das categorias. {%- endcomment -%}
+{%- assign tem_pronta_entrega = false -%}
+{%- assign tem_oferta = false -%}
+{%- for peca in pecas -%}
+  {%- if peca.pronta_entrega -%}{%- assign tem_pronta_entrega = true -%}{%- endif -%}
+  {%- if peca.oferta -%}{%- assign tem_oferta = true -%}{%- endif -%}
+{%- endfor -%}
+{%- assign chips_especiais = 0 -%}
+{%- if tem_pronta_entrega -%}{%- assign chips_especiais = chips_especiais | plus: 1 -%}{%- endif -%}
+{%- if tem_oferta -%}{%- assign chips_especiais = chips_especiais | plus: 1 -%}{%- endif -%}
+{%- assign total_chips = categorias.size | plus: chips_especiais -%}
+{%- if pecas.size > 1 -%}
+<div class="estoque-controls reveal" data-estoque-controls>
+  <div class="estoque-controls-top">
+    <div class="estoque-search">
+      <svg class="estoque-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+      </svg>
+      <input type="search" class="estoque-search-input" data-estoque-search placeholder="Buscar peça por nome…" aria-label="Buscar peça por nome" autocomplete="off">
+    </div>
+    <div class="estoque-top-actions">
+      {%- if total_chips > 1 -%}
+      <button type="button" class="estoque-toggle" data-estoque-toggle aria-expanded="true" aria-controls="estoque-filters-panel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M4 5h16M7 12h10M10 19h4"/>
+        </svg>
+        <span>Filtros</span>
+        <svg class="estoque-toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </button>
+      {%- endif -%}
+      <div class="estoque-sort">
+        <select class="estoque-sort-select" data-estoque-sort aria-label="Ordenar peças">
+          <option value="padrao">Ordenar por…</option>
+          <option value="preco-asc">Preço: menor → maior</option>
+          <option value="preco-desc">Preço: maior → menor</option>
+          <option value="nome-asc">Nome (A–Z)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  {%- if total_chips > 1 -%}
+  <div class="estoque-filters" id="estoque-filters-panel" role="group" aria-label="Filtrar por categoria">
+    <button type="button" class="estoque-chip is-active" data-filtro="todos" aria-pressed="true">Todos <span class="estoque-chip-count" aria-hidden="true"></span></button>
+    {%- if tem_pronta_entrega -%}
+    <button type="button" class="estoque-chip" data-filtro="Pronta entrega" aria-pressed="false">Pronta entrega <span class="estoque-chip-count" aria-hidden="true"></span></button>
+    {%- endif -%}
+    {%- if tem_oferta -%}
+    <button type="button" class="estoque-chip estoque-chip--special" data-filtro="Oferta" aria-pressed="false">Oferta <span class="estoque-chip-count" aria-hidden="true"></span></button>
+    {%- endif -%}
+    {%- for cat in categorias -%}
+    <button type="button" class="estoque-chip" data-filtro="{{ cat | escape }}" aria-pressed="false">{{ cat | escape }} <span class="estoque-chip-count" aria-hidden="true"></span></button>
+    {%- endfor -%}
+  </div>
+  <div class="estoque-active" data-estoque-active hidden>
+    <span class="estoque-active-label">Filtros:</span>
+    <div class="estoque-active-pills" data-estoque-active-pills></div>
+    <button type="button" class="estoque-clear" data-estoque-clear>Limpar filtros</button>
+  </div>
+  {%- endif -%}
+</div>
+<p class="estoque-count" data-estoque-count role="status">Mostrando {{ pecas.size }} {% if pecas.size == 1 %}peça{% else %}peças{% endif %}</p>
+{%- endif -%}
+<div class="estoque-grid reveal-stagger">
+  {%- for peca in pecas -%}
+  {%- comment -%} Monta a lista de fotos: usa "imagens" (lista) ou cai para "imagem" (única). {%- endcomment -%}
+  {%- assign fotos = peca.imagens -%}
+  {%- if fotos == nil and peca.imagem and peca.imagem != "" -%}
+    {%- assign fotos = peca.imagem | split: "§" -%}
+  {%- endif -%}
+  {%- comment -%} Categorias da peça: usa "categorias" (lista) ou cai para "categoria" (única). {%- endcomment -%}
+  {%- assign cats = peca.categorias -%}
+  {%- if cats == nil -%}
+    {%- assign catFallback = peca.categoria | default: "Outros" -%}
+    {%- assign cats = catFallback | split: "§" -%}
+  {%- endif -%}
+  {%- comment -%} Data usada só pro filtro JS: categorias reais + pseudo-tags "Pronta entrega"/"Oferta". {%- endcomment -%}
+  {%- assign filtro_cats = cats | join: "§" -%}
+  {%- if peca.pronta_entrega -%}{%- assign filtro_cats = filtro_cats | append: "§Pronta entrega" -%}{%- endif -%}
+  {%- if peca.oferta -%}{%- assign filtro_cats = filtro_cats | append: "§Oferta" -%}{%- endif -%}
+  {%- comment -%} Preço final com desconto quando a peça está em oferta (padrão 20%, ou "desconto_pct" da peça). {%- endcomment -%}
+  {%- if peca.oferta -%}
+    {%- assign desconto_pct = peca.desconto_pct | default: 20 -%}
+    {%- assign valor_desconto = peca.preco | times: desconto_pct | divided_by: 100.0 -%}
+    {%- assign preco_final = peca.preco | minus: valor_desconto | round -%}
+  {%- else -%}
+    {%- assign desconto_pct = nil -%}
+    {%- assign preco_final = peca.preco -%}
+  {%- endif -%}
+  <article
+    class="estoque-card"
+    data-categorias="{{ filtro_cats | escape }}"
+    data-nome="{{ peca.nome | escape }}"
+    data-preco="{{ preco_final }}"
+    data-ordem="{{ forloop.index0 }}"
+    data-pronta-entrega="{{ peca.pronta_entrega | default: false }}"
+    data-oferta="{{ peca.oferta | default: false }}"
+  >
+    {%- if fotos and fotos.size > 0 -%}
+    <div class="estoque-card-media"{% if fotos.size > 1 %} data-carousel{% endif %}>
+      {%- if peca.pronta_entrega or peca.tamanho_cm or peca.oferta -%}
+      <div class="estoque-badges">
+        {%- if peca.oferta -%}
+        <span class="estoque-badge estoque-badge--oferta">-{{ desconto_pct }}%</span>
+        {%- endif -%}
+        {%- if peca.pronta_entrega -%}
+        <span class="estoque-badge">Pronta entrega</span>
+        {%- endif -%}
+        {%- if peca.tamanho_cm -%}
+        <span class="estoque-badge estoque-badge--tamanho">{{ peca.tamanho_cm }} cm</span>
+        {%- endif -%}
+      </div>
+      {%- endif -%}
+      {%- for foto in fotos -%}
+      <button type="button" class="img-zoom estoque-slide{% if forloop.first %} is-active{% endif %}" aria-label="Ampliar foto {{ forloop.index }} de {{ peca.nome }}"{% unless forloop.first %} tabindex="-1"{% endunless %}>
+        <img
+          class="estoque-card-image"
+          src="{{ foto | relative_url }}"
+          alt="{{ peca.nome }}, foto {{ forloop.index }}"
+          loading="lazy"
+          decoding="async"
+        >
+      </button>
+      {%- endfor -%}
+      {%- if fotos.size > 1 -%}
+      <button type="button" class="estoque-nav estoque-nav-prev" aria-label="Foto anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="estoque-nav estoque-nav-next" aria-label="Próxima foto">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <div class="estoque-dots">
+        {%- for foto in fotos -%}
+        <button type="button" class="estoque-dot{% if forloop.first %} is-active{% endif %}" aria-label="Ver foto {{ forloop.index }}"></button>
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
+    </div>
+    {%- else -%}
+    <div class="estoque-card-media estoque-card-media-empty">
+      {%- if peca.pronta_entrega or peca.tamanho_cm or peca.oferta -%}
+      <div class="estoque-badges">
+        {%- if peca.oferta -%}
+        <span class="estoque-badge estoque-badge--oferta">-{{ desconto_pct }}%</span>
+        {%- endif -%}
+        {%- if peca.pronta_entrega -%}
+        <span class="estoque-badge">Pronta entrega</span>
+        {%- endif -%}
+        {%- if peca.tamanho_cm -%}
+        <span class="estoque-badge estoque-badge--tamanho">{{ peca.tamanho_cm }} cm</span>
+        {%- endif -%}
+      </div>
+      {%- endif -%}
+      <div class="estoque-empty-inner" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <path d="M21 15l-5-5L5 21"/>
+        </svg>
+        <span>Foto em breve</span>
+      </div>
+    </div>
+    {%- endif -%}
+    <div class="estoque-card-body">
+      {%- if peca.categorias or peca.categoria -%}
+      <div class="estoque-card-cats">
+        {%- for c in cats -%}
+        <span class="estoque-card-cat">{{ c | escape }}</span>
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
+      <h3 class="estoque-card-title">{{ peca.nome }}</h3>
+      {%- if peca.descricao -%}
+      <p class="estoque-card-desc">{{ peca.descricao }}</p>
+      {%- endif -%}
+      <div class="estoque-card-footer">
+        {%- if peca.oferta -%}
+        <span class="estoque-card-price estoque-card-price--oferta">
+          <span class="estoque-card-price-old">R$ {{ peca.preco }}</span>
+          <span class="estoque-card-price-new">R$ {{ preco_final }}</span>
+        </span>
+        {%- else -%}
+        <span class="estoque-card-price">R$ {{ peca.preco }}</span>
+        {%- endif -%}
+        <a
+          class="btn btn-gradient estoque-card-btn"
+          href="https://ig.me/m/{{ site.instagram.username }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-estoque-buy
+          data-peca="{{ peca.nome }}"
+          data-pronta-entrega="{{ peca.pronta_entrega | default: false }}"
+        >
+          Quero essa peça
+        </a>
+      </div>
+    </div>
+  </article>
+  {%- endfor -%}
+</div>
+{%- else -%}
+<div class="estoque-empty">
+  <div class="estoque-empty-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+      <path d="M3.3 7.7L12 12.5l8.7-4.8M12 22V12.5"/>
+    </svg>
+  </div>
+  <p>No momento a loja está vazia. Chame no Instagram para uma encomenda personalizada!</p>
+  <a class="btn btn-gradient" href="{{ site.instagram.profile_url }}" target="_blank" rel="noopener noreferrer">
+    Chamar @{{ site.instagram.username }}
+  </a>
+</div>
+{%- endif -%}

@@ -1,0 +1,17 @@
+# Marcas parceiras exibidas na seção "Parceiros" da home.
+# A seção fica escondida enquanto esta lista estiver vazia.
+# Campos:
+#   nome                - nome do parceiro (obrigatório)
+#   logo                - caminho da imagem em assets/img/parceiros/ (obrigatório)
+#   instagram_url        - perfil do Instagram (opcional)
+#   instagram_username   - @usuario exibido no botão (obrigatório se instagram_url existir)
+#   site_url            - link para o site/loja do parceiro (opcional)
+
+- nome: "Quik 3D Print"
+  logo: "/assets/img/parceiros/quik-3dprint.jpg"
+  instagram_url: "https://www.instagram.com/quik.3dprint"
+  instagram_username: "quik.3dprint"
+
+- nome: "Tomodachi Colecionáveis"
+  logo: "/assets/img/parceiros/tomodachi-colecionaveis.png"
+  site_url: "https://www.lojatomodachi.com.br/"
